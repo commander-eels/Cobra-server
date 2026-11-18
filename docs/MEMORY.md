@@ -1,5 +1,7 @@
 # Memory
 
+2026-11-18. Repository cleanup. `scripts/podman/` is the master copy; Project-Eo's `home/cobra-setup/cobra-server-scripts/podman/` is now identical to it (both gained `navidrome-talk.sh` :4534 and `navidrome-archives.sh` :4535, `romm-reset.sh`, and the Calibre-Web, eo-account and forms personal-state entries). The README lists which repository owns what. Merged and old branches are in `docs/branch-archive.md`.
+
 2026-11-09. Favorites, progress and per-user settings are part 13 (`docs/manual/13-personal-state.md`) and `scripts/podman/state.sh`.
 
 A container recreate already remounts `/srv/stream/<app>` and `/srv/gate/<app>`. A wipe of that directory does not. Snapshots are `/srv/storage/vault/personal-state` on the SGIN (off the Samba share) and `/srv/backups/personal-state` on the gate (not under `/srv/gate`). App scripts restore when the marker database is missing. `sgin/state-backup.sh` and `gate/state-backup.sh` also enable a 03:10 user timer.

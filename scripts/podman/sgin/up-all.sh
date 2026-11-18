@@ -4,7 +4,7 @@
 set -euo pipefail
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 for s in jellyfin ersatztv navidrome navidrome-talk navidrome-archives audiobookshelf kavita romm; do
-  bash "$here/$s.sh"
+  "$here/$s.sh"
   echo
 done
 liq=${COBRA_DATA:-/srv/stream}/radio/radio.liq
