@@ -23,8 +23,8 @@ fi
 
 state_app_names() {
   case $1 in
-    sgin) printf '%s\n' jellyfin navidrome audiobookshelf kavita romm ersatztv radio cobra-breaks ;;
-    gate) printf '%s\n' authelia vaultwarden paperless metube homepage uptime-kuma hiscore eo-art ;;
+    sgin) printf '%s\n' jellyfin navidrome navidrome-talk navidrome-archives audiobookshelf kavita romm calibre-web ersatztv radio cobra-breaks ;;
+    gate) printf '%s\n' authelia vaultwarden paperless metube homepage uptime-kuma hiscore eo-art eo-account forms ;;
     *) return 1 ;;
   esac
 }
@@ -36,11 +36,11 @@ state_load() {
   STATE_DB=files
   STATE_NOTES=
   case $name in
-    jellyfin|navidrome|audiobookshelf|kavita|romm|ersatztv|radio|cobra-breaks)
+    jellyfin|navidrome|navidrome-talk|navidrome-archives|audiobookshelf|kavita|romm|calibre-web|ersatztv|radio|cobra-breaks)
       STATE_HOST=sgin
       STATE_BASE=${COBRA_DATA:-/srv/stream}
       ;;
-    authelia|vaultwarden|paperless|metube|homepage|uptime-kuma|hiscore|eo-art)
+    authelia|vaultwarden|paperless|metube|homepage|uptime-kuma|hiscore|eo-art|eo-account|forms)
       STATE_HOST=gate
       STATE_BASE=${COBRA_DATA:-/srv/gate}
       ;;
@@ -67,7 +67,7 @@ state_marker_file() {
         printf '%s\n' "$STATE_DATA/config/data/library.db"
       fi
       ;;
-    navidrome) printf '%s\n' "$STATE_DATA/navidrome.db" ;;
+    navidrome|navidrome-talk|navidrome-archives) printf '%s\n' "$STATE_DATA/navidrome.db" ;;
     audiobookshelf)
       if [ -f "$STATE_DATA/config/absdatabase.sqlite" ]; then
         printf '%s\n' "$STATE_DATA/config/absdatabase.sqlite"
@@ -77,6 +77,9 @@ state_marker_file() {
       ;;
     kavita) printf '%s\n' "$STATE_DATA/kavita.db" ;;
     romm) printf '%s\n' "$STATE_DATA/db/ibdata1" ;;
+    calibre-web) printf '%s\n' "$STATE_DATA/app.db" ;;
+    eo-account) printf '%s\n' "$STATE_DATA/data/apps.json" ;;
+    forms) printf '%s\n' "$STATE_DATA/app/forms.json" ;;
     ersatztv) find "$STATE_DATA" -type f \( -name '*.db' -o -name '*.sqlite' \) -print -quit 2>/dev/null || true ;;
     radio) printf '%s\n' "$STATE_DATA/radio.liq" ;;
     cobra-breaks) find "$STATE_DATA" -mindepth 1 -type f ! -path '*/.cobra-restore/*' -print -quit 2>/dev/null || true ;;
@@ -467,11 +470,32 @@ fill_eo_art() {
   STATE_NOTES="eo_art.py and folders.json. The pictures themselves stay on dock1a and are not in this snapshot."
 }
 
+# Calibre-Web Automated (cobra-setup step 20). /config is /srv/stream/calibre-web.
+fill_calibre_web() {
+  stage_tree "$STATE_DATA" "$STAGE/payload" ./log ./logs ./cache ./.cache ./processed_books ./cwa-book-ingest || return 1
+  STATE_DB=sqlite
+  STATE_NOTES="app.db holds the users, their shelves, read and unread marks, Kobo sync state and per-user view settings; CWA's own settings are beside it. The library itself (metadata.db and the books) is on dock1a/calibre-library and is not in this snapshot."
+}
+
+# eo-account, the Multi-Pass page (cobra-setup step 15). The passwords themselves are Authelia's users.yml.
+fill_eo_account() {
+  stage_tree "$STATE_DATA" "$STAGE/payload" || return 1
+  STATE_DB=sqlite
+  STATE_NOTES="user-stats.sqlite (each person's daily TV, audiobook and comics numbers), eo_account.py, Formidable's ff.js, apps.json (each app's admin login, so this snapshot is a secret) and bays.json if there is one. The users' passwords are in the authelia snapshot."
+}
+
+# cobra-forms (cobra-setup step 14): forms.json and every saved petition (inbox/ and spam/).
+fill_forms() {
+  stage_tree "$STATE_DATA" "$STAGE/payload" || return 1
+  STATE_DB=files
+  STATE_NOTES="forms.py, forms.json, forms.env and every saved submission with its pictures (data/inbox, data/spam). The Gmail app password is a podman secret and stays in podman's store."
+}
+
 fill_state() {
   local rc=0
   case $STATE_NAME in
     jellyfin) fill_jellyfin || rc=1 ;;
-    navidrome) fill_navidrome || rc=1 ;;
+    navidrome|navidrome-talk|navidrome-archives) fill_navidrome || rc=1 ;;
     audiobookshelf) fill_audiobookshelf || rc=1 ;;
     kavita) fill_kavita || rc=1 ;;
     romm) fill_romm || rc=1 ;;
@@ -486,6 +510,9 @@ fill_state() {
     hiscore) fill_hiscore || rc=1 ;;
     authelia) fill_authelia || rc=1 ;;
     eo-art) fill_eo_art || rc=1 ;;
+    calibre-web) fill_calibre_web || rc=1 ;;
+    eo-account) fill_eo_account || rc=1 ;;
+    forms) fill_forms || rc=1 ;;
     *) die "no snapshot method for $STATE_NAME" ;;
   esac
   [ "$rc" = 0 ] || return 1
@@ -841,6 +868,9 @@ state_restore_cli() {
         ;;
       cobra-breaks)
         say "files are back in $STATE_DATA. Start the Quadlet (there is no podman script for this one)."
+        ;;
+      calibre-web|eo-account|forms)
+        say "files are back in $STATE_DATA. Start its Quadlet: systemctl --user start $STATE_CONTAINER"
         ;;
       *)
         say "files are back. Start it with ./$STATE_CONTAINER.sh"
