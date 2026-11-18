@@ -444,7 +444,7 @@ chmod 600 /srv/gate/authelia/configuration.yml           # only podsvc (and Auth
 - `&station` / `*station` is plain YAML: the second rule reuses the first rule's list, so a new floor is added in one place.
 - Parts 7 and 8 add `scores.` and `radio.` to `access_control.rules` the same way.
 
-Users (`/srv/gate/authelia/users.yml`). One block per person; everyone signs in to the whole station with these:
+Users (`/srv/gate/authelia/users.yml`). One block per person; everyone signs in to the whole station with these. Day-to-day add/change/remove steps: [authelia-users/README.md](../authelia-users/README.md).
 
 ```bash
 # hash NAME: asks for NAME's password without showing it (so it never lands in the shell history),
