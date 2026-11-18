@@ -6,7 +6,7 @@ set -uo pipefail
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 failed=()
 for s in authelia vaultwarden paperless metube homepage uptime-kuma hiscore eo-art nginx; do
-  "$here/$s.sh" || failed+=("$s")
+  bash "$here/$s.sh" || failed+=("$s")
   echo
 done
 podman ps --pod --format 'table {{.Names}}\t{{.Status}}\t{{.PodName}}'

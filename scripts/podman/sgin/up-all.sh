@@ -8,5 +8,5 @@ for s in jellyfin ersatztv navidrome navidrome-talk navidrome-archives audiobook
   echo
 done
 liq=${COBRA_DATA:-/srv/stream}/radio/radio.liq
-if [ -r "$liq" ]; then "$here/radio.sh"; else echo "==> skipping the radio (no $liq yet, part 8)"; fi
+if [ -r "$liq" ]; then bash "$here/radio.sh"; else echo "==> skipping the radio (no $liq yet, part 8)"; fi
 podman ps --pod --format 'table {{.Names}}\t{{.Status}}\t{{.PodName}}'
