@@ -39,6 +39,7 @@ Every script is safe to run again. It removes that app's container and starts a 
 | Add another person's music | No new server: in Navidrome, Settings → Users → + and tick their libraries (or add a library `dock1a/music/<name>` for them). See [`docs/music.md`](../../docs/music.md) |
 | Give one app extra settings | put `KEY=value` lines in `~/.config/cobra/<container>.env` and rerun its script, e.g. RomM's metadata keys in `romm.env` |
 | Change a pod's ports | edit `sgin/pod.sh` or `gate/pod.sh`, then `RECREATE_POD=1 ./up-all.sh` |
+| Start RomM over at its setup wizard (lost admin login) | `./romm-reset.sh` on the SGIN: moves `/srv/stream/romm` aside (nothing deleted, ROMs untouched) and starts RomM blank |
 | Read a generated password | `podman secret ls`, then `podman secret inspect --showsecret --format '{{.SecretData}}' romm-db-password` |
 | Snapshot favorites and per-user settings | `./state-backup.sh` (first run also enables the daily 03:10 timer). [Part 13](../../docs/manual/13-personal-state.md) |
 | Restore one wiped app | run its script again (`./navidrome.sh`), or `./state-restore.sh navidrome` |

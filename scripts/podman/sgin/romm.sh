@@ -5,6 +5,8 @@
 #
 # Coming from the manual's Quadlet setup with a database already made? Give the old password once:
 #   ROMM_DB_PASSWORD=<old DBPW> ROMM_AUTH_SECRET=<old SECRET> ./romm.sh
+# Lost the admin login, or no setup wizard? ./romm-reset.sh moves RomM's data aside (ROMs untouched)
+# and starts it blank, so the wizard shows again.
 # Metadata keys (covers, names): put them in ~/.config/cobra/romm.env, e.g.
 #   IGDB_CLIENT_ID=...  IGDB_CLIENT_SECRET=...  SCREENSCRAPER_USER=...  SCREENSCRAPER_PASSWORD=...  STEAMGRIDDB_API_KEY=...
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
