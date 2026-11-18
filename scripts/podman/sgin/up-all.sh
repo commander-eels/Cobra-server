@@ -3,7 +3,7 @@
 # Skips the radio unless radio.liq is in place.
 set -euo pipefail
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-for s in jellyfin ersatztv navidrome audiobookshelf kavita romm; do
+for s in jellyfin ersatztv navidrome navidrome-talk navidrome-archives audiobookshelf kavita romm; do
   "$here/$s.sh"
   echo
 done
