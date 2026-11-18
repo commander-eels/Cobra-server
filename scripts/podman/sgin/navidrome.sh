@@ -7,7 +7,8 @@
 #   "Rachel"           /media/dock1a/music/rachel   (add once: Settings -> Libraries -> +)
 # Libraries may not overlap, so the main library is music/eels, never all of music/.
 # Who sees which library: Settings -> Users -> the person -> Libraries. Admins see them all.
-# Comedy and The Ward (sessions) live in Audiobookshelf (docs/music.md).
+# Talk Radio & Comedy Club and The Archives are their own Navidromes (navidrome-talk.sh :4534, navidrome-archives.sh :4535).
+# The Ward (sessions) lives in Audiobookshelf (docs/music.md).
 #
 # It trusts the gate's Remote-User header (the station's Authelia sign-in, part 5.4), so it doesn't ask twice.
 # ExtAuth is what current Navidrome calls that trust (ND_EXTAUTH_TRUSTEDSOURCES). The old

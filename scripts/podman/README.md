@@ -1,10 +1,12 @@
 # Podman run scripts
 
+> This folder is the master copy. `commander-eels/Project-Eo` carries an identical copy in `home/cobra-setup/cobra-server-scripts/podman/` so its setup bundle can be copied to the servers in one go. Change scripts here first, then copy the folder across (both copies matched on 2026-11-18).
+
 One bash script per app, using plain `podman run`. They build the same two pods as the manual's Quadlet files (parts 3.8, 5.4, 7, 8): same images, ports, folders and users. Use them instead of the Quadlets, or to rebuild a single app quickly.
 
 | Host | Folder | Pod | Scripts |
 |---|---|---|---|
-| SGIN, `cobra-stream` (10.6.9.20) | [`sgin/`](sgin/) | `stream` | `jellyfin.sh` (Quick Sync), `ersatztv.sh` (live TV channels + guide), `navidrome.sh` (one Navidrome, a library per person), `audiobookshelf.sh`, `kavita.sh`, `romm.sh` (RomM + EmulatorJS + MariaDB), `radio.sh` (Icecast + Liquidsoap, part 8) |
+| SGIN, `cobra-stream` (10.6.9.20) | [`sgin/`](sgin/) | `stream` | `jellyfin.sh` (Quick Sync), `ersatztv.sh` (live TV channels + guide), `navidrome.sh` (Music :4533, a library per person), `navidrome-talk.sh` (Talk Radio & Comedy Club :4534), `navidrome-archives.sh` (The Archives :4535), `audiobookshelf.sh`, `kavita.sh`, `romm.sh` (RomM + EmulatorJS + MariaDB), `radio.sh` (Icecast + Liquidsoap, part 8) |
 | Gate VM, `cobra-gate` (10.6.9.10) | [`gate/`](gate/) | `gate` | `vaultwarden.sh`, `paperless.sh` (Paperless + Postgres + Redis), `metube.sh`, `homepage.sh`, `hiscore.sh` (part 7), `eo-art.sh` (the station's pictures), plus the pieces the gate needs to be reachable: `nginx.sh`, `authelia.sh` (the station sign-in), `uptime-kuma.sh` |
 
 Each folder also has `up-all.sh`, which runs every script on that host in order. On the gate, one app that fails (say Paperless while the SGIN's share isn't mounted) doesn't stop the others: nginx and Authelia still start, and the failures are listed at the end. The gate also has `check.sh`, which tests every `*.songofeo.com` name (certificate, sign-in redirects, 2FA apps, apps answering) and says what to look at for each failure.
