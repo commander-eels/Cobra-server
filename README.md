@@ -36,10 +36,9 @@ The full address plan (switch, Wi-Fi, Home Assistant, R620 lab, desktops) is in 
 | Jellyfin | 8096 | `tv.songofeo.com` | `sgin/jellyfin.sh` |
 | ErsatzTV | 8409 | (inside Jellyfin) | `sgin/ersatztv.sh` |
 | Navidrome, Music | 4533 | `music.`, `mustang.` | `sgin/navidrome.sh` |
-| Navidrome, Talk Radio & Comedy Club | 4534 | `talk.`, `comedy.` | `sgin/navidrome-talk.sh` |
-| Navidrome, The Archives | 4535 | `archives.` | `sgin/navidrome-archives.sh` |
-| Audiobookshelf | 13378 | `audio.`, `sessions.` | `sgin/audiobookshelf.sh` |
-| Kavita | 5000 | `comics.` | `sgin/kavita.sh` |
+| Audiobookshelf | 13378 | `audio.`, `sessions.`, `talk.`, `comedy.`, `archives.` | `sgin/audiobookshelf.sh` (Talk Radio & Comedy Club and The Archives are its libraries since 2026-11-18) |
+| Kavita | 5000 | `comics.` | `sgin/kavita.sh` (also the RPG Vault library, `dock1a/books/RPG Books`) |
+| (retired) Navidrome, Talk / Archives | 4534, 4535 | | `sgin/navidrome-talk.sh`, `sgin/navidrome-archives.sh`: no longer started by `up-all.sh`; data kept |
 | RomM | 8080 | `arcade.` | `sgin/romm.sh` (`romm-reset.sh` to start over) |
 | Calibre-Web Automated | 8083 | `books.` | Project-Eo `home/cobra-setup/20-sgin-calibre-web.sh` |
 | Icecast radio | 8000 | `radio.` | `sgin/radio.sh` |
