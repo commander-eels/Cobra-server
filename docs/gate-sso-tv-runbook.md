@@ -173,7 +173,7 @@ the rest. Nothing changes on the Xfinity router, so the work laptop is untouched
       OPNsense drops *every* new connection that comes from `10.0.0.x`, so the TV and phone can't
       reach port 443 or 53 (nor the phone's "home" WireGuard profile at `10.0.0.2:51820`). Leave
       **Block bogon networks** as it is.
-- [ ] **Firewall → NAT → Port Forward**, the 443 → `10.6.9.10` rule: **Destination** must be
+- [ ] **Firewall → NAT → Destination NAT**, the 443 → `10.6.9.10` rule: **Destination** must be
       **WAN address** (that covers both the public IP and `10.0.0.2`). A single typed-in public IP
       would miss the Xfinity side.
 - [ ] **Firewall → Rules → WAN**: "Allow 443 to gate" has **Source: any**.
