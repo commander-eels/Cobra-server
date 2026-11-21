@@ -67,6 +67,7 @@ Start with the overview, then follow the parts in order.
 | 12. Form service, inbox only (**the chosen go-live**) | [docs/manual/12-forms-inbox-only.md](docs/manual/12-forms-inbox-only.md) |
 | 12 (alt). Form service with Gmail | [docs/manual/12-forms.md](docs/manual/12-forms.md) |
 | 13. Personal state (favorites, progress, settings) | [docs/manual/13-personal-state.md](docs/manual/13-personal-state.md) |
+| Software versions the manual is written for (check before following a step) | [docs/VERSIONS.md](docs/VERSIONS.md) |
 
 ---
 
