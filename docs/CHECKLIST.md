@@ -21,7 +21,7 @@ it's done. Work on the-box first; the phone is only for scanning codes and cellu
       in OPNsense, Unbound host overrides for the app names → `10.0.0.2` (never a `*.songofeo.com`
       wildcard), Unbound listening on WAN, a WAN pass rule for TCP/UDP 53 **from 10.0.0.0/24 only**,
       then phone static IP + DNS 10.0.0.2 on Electronomicon and Cobra1's Wi-Fi DNS 10.0.0.2.
-      Walkthrough is live, step by step. Undo when the access point arrives
+      Walkthrough: [home-wifi/README.md](home-wifi/README.md), done live step by step. Undo when the access point arrives
       ([manual 2.10b](manual/02-networking.md#210b-trusted-wi-fi-access-point-on-the-switch)).
 - [ ] **VIP keypad**: Porkbun CNAME `vip` → `gate.songofeo.com`, then the gate's nginx `vip.` block
       ([manual 5.4](manual/05-final-touches.md#54-gate-pod-as-podsvc-sudo-machinectl-shell-podsvc), PR #50).

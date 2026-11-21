@@ -158,6 +158,9 @@ Navidrome made automatically from the gate sign-in has a random password, so set
 
 ## Step 4. The TV on the Xfinity router and your phone on Electronomicon
 
+> **Superseded 2026-11-21 by [home-wifi/README.md](home-wifi/README.md)** (current names, Unbound access list,
+> phone address `10.0.0.251`, TV both ways). Use that one; this section is kept for history.
+
 Why these fail today: a device on the Xfinity side (`10.0.0.x`) looks up `tv.songofeo.com`, gets your
 public address, and the Xfinity router can't send traffic to its own public address back inside (no
 NAT loopback). The fix is the "Home DNS trick": OPNsense's own DNS (Unbound) answers the station's
