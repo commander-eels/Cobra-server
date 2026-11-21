@@ -2,6 +2,8 @@
 
 > **Why this file is here:** this is the cobra run-list README as shipped in **v3.5.1** (2026-11-21), kept word for word as an example of a layout that goes against our company principle of **clear, easy-to-follow information**. The owner tried to follow it and got lost. It was replaced by the one-file checklist in v3.6. The rules that fixed it are in [README-RULES.md](../README-RULES.md).
 >
+> **The owner's verdict (2026-11-21):** "The info was accurate, but the instructions, bouncing around, excess descriptions, and inaccurate UI directions due to outdated references was the real killer combo today." The facts were right. Bouncing between docs, too much description, and menu directions taken from outdated references made it fail together.
+>
 > **What's wrong with it:**
 >
 > 1. **Preamble before the steps.** Version notes, a philosophy paragraph and an overview table come first. You scroll a long way before step 1.
@@ -10,6 +12,7 @@
 > 4. **Value-only field tables.** A cell like "DNS to DNS" or "8096 to 8096" reads like text to type. It never says "Dropdown: pick DNS" or "Type 8096".
 > 5. **Many actions per step.** One step holds several clicks, commands and tables, so it's easy to lose your place.
 > 6. **Troubleshooting mixed into the steps.** "If it goes wrong" tables sit between the actions, so the next real action is hard to find.
+> 7. **UI directions from outdated references.** Earlier drafts used old OPNsense menu names ("Port Forward" instead of Destination NAT) and missed 26.x defaults such as **Firewall rule: Manual**. Menu names and defaults must be checked against the current release first.
 
 ---
 
