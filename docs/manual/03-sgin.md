@@ -857,7 +857,7 @@ table inet filter {
     ct state established,related accept
     iif lo accept
     ip protocol icmp accept
-    ip saddr { 10.6.9.0/24, 10.6.99.0/24 } tcp dport { 22, 53, 80, 443, 445, 4533, 4534, 4535, 5000, 8007, 8080, 8096, 8409, 9090, 13378 } accept
+    ip saddr { 10.6.9.0/24, 10.6.99.0/24 } tcp dport { 22, 53, 80, 443, 445, 4533, 4534, 4535, 5000, 5001, 5002, 8007, 8080, 8096, 8409, 9090, 13378 } accept
     ip saddr { 10.6.9.0/24, 10.6.99.0/24 } udp dport 53 accept
   }
 }

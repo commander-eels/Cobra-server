@@ -8,6 +8,7 @@
 #   4534 Navidrome, Talk Radio & Comedy Club (navidrome-talk.sh: talk. and comedy.)
 #   4535 Navidrome, The Archives (navidrome-archives.sh: archives.)
 #   8080 RomM       8000  Icecast (radio, part 8)
+# Not in this pod: Kavita books :5001 and Kavita rpg :5002 (kavita.sh), each in a pod of its own.
 STREAM_POD=stream
 STREAM_PORTS=(8096:8096 8409:8409 13378:13378 5000:5000 4533:4533 4534:4534 4535:4535 8080:8080 8000:8000)
 STREAM_DATA=${COBRA_DATA:-/srv/stream}
