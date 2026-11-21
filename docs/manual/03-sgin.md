@@ -68,7 +68,7 @@ The network adapter has to sit on the hub because the USB-A ports would cap it a
 
 - [ ] After reboot, log in on the SGIN's screen as `eels` and note its MAC: `ip -br link` (the `enx…` line). It's the USB adapter's MAC: replace the adapter and the `.20` mapping below has to be edited to the new MAC
 - [ ] OPNsense → **Firewall → NAT → Destination NAT**: delete each rule pointing at `10.6.9.200` (part 2.4) → **Apply**. The old sites stay offline until part 5's gate takes over 443
-- [ ] OPNsense DHCP page from part 2.6 (**Services → ISC DHCPv4 → LAN** or **Services → Dnsmasq DNS & DHCP**) → static mappings / hosts: if a row has the SGIN's MAC (at `.200` or `.20`), edit it to IP `10.6.9.20`, hostname `cobra-stream`; otherwise **+** add one. Save → **Apply**
+- [ ] OPNsense DHCP page from part 2.6 (**Services → Dnsmasq DNS & DHCP** on 26.x, or **Services → ISC DHCPv4 → LAN** if the `os-isc-dhcp` plugin is installed) → static mappings / hosts: if a row has the SGIN's MAC (at `.200` or `.20`), edit it to IP `10.6.9.20`, hostname `cobra-stream`; otherwise **+** add one. Save → **Apply**
 - [ ] On the SGIN: `sudo systemctl restart networking` (or `sudo reboot`)
 - [ ] Check on the SGIN's screen: `ip -4 -br a` shows `10.6.9.20/24`
 - [ ] From the desktop (PowerShell): `ssh eels@10.6.9.20` → type `yes` to the new host key → the `eels` password
@@ -1126,7 +1126,7 @@ sudo pihole-FTL --config dns.hosts '["10.6.9.1 cobra-firewall.home.arpa cobra-fi
 - [ ] From the desktop: `nslookup tv.songofeo.com 10.6.9.20` → `10.6.9.10`, and `nslookup cobra-gate 10.6.9.20` → `10.6.9.10`
 
 - [ ] Web admin: `http://10.6.9.20/admin` → log in with the password you just set
-- [ ] OPNsense DHCP page from part 2.6 (**Services → ISC DHCPv4 → LAN**, or **Services → Dnsmasq DNS & DHCP** → DHCP options) → DNS servers: change the second one from `10.6.9.1` to `10.6.9.20`, so the list is `10.6.9.3`, `10.6.9.20` → Save → **Apply**. Machines pick it up at their next lease renewal (on Windows: `ipconfig /renew`)
+- [ ] OPNsense DHCP page from part 2.6 (**Services → Dnsmasq DNS & DHCP** → DHCP options on 26.x, or **Services → ISC DHCPv4 → LAN** if the `os-isc-dhcp` plugin is installed) → DNS servers: change the second one from `10.6.9.1` to `10.6.9.20`, so the list is `10.6.9.3`, `10.6.9.20` → Save → **Apply**. Machines pick it up at their next lease renewal (on Windows: `ipconfig /renew`)
 
 ## 3.10 Proxmox Backup Server
 

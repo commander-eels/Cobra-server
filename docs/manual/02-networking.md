@@ -16,8 +16,8 @@ OPNsense is a FreeBSD-based firewall distro managed from a web UI. You configure
 |---|---|
 | **WAN / LAN** | Interface roles. WAN = `vtnet0` (plugged into `vmbr1` → USB NIC → Xfinity). LAN = `vtnet1` (plugged into `vmbr0` → onboard NIC → switch). |
 | **Console menu** | Text menu on the VM's screen (Proxmox → 100 → Console). Options 1 (assign interfaces) and 2 (set IP) rescue you if the web UI is unreachable. |
-| **Rules** | Firewall → Rules → per interface. Default: LAN may go anywhere, WAN blocks all inbound. Rules are evaluated on the interface where traffic **enters**. |
-| **NAT → Destination NAT** | Inbound forwards (TCP 443 to the gate, in part 5). Creating one auto-creates its WAN pass rule. |
+| **Rules** | Firewall → Rules (26.x: one rules page; pick the interface, e.g. **WAN**, in the interface selector at the top. The old per-interface PHP pages only exist with the `os-firewall-legacy` plugin). Default: LAN may go anywhere, WAN blocks all inbound. Rules are evaluated on the interface where traffic **enters**. |
+| **NAT → Destination NAT** | Inbound forwards (TCP 443 to the gate, in part 5). Called Port Forward before 26.1. Since 26.1 a new forward does **not** auto-create its WAN pass rule: its **Firewall rule** field defaults to *Manual* (no rule). Either set it to **Pass** or **Register rule**, or add the pass rule yourself under Firewall → Rules → WAN (part 5.5 does this). |
 | **Unbound** | OPNsense's DNS resolver. Here it forwards to Cloudflare/Quad9 over TLS (port 853). Pi-hole uses it as its upstream. |
 | **Plugins** | Extra packages: System → Firmware → Plugins. You need `os-ddclient` and `os-crowdsec`. |
 | **Apply** | Most pages need **Save** *and then* **Apply changes** (a yellow banner). Nothing takes effect until you apply. |
@@ -143,7 +143,7 @@ ip -br addr show vmbr0                        # still 10.6.9.2/24; the host's ow
 **5. Keep the old server reachable until part 5 replaces it:**
 
 - [ ] Old server on **`10.6.9.200`**. If it's already set to `.200` on the box itself (yours is, with gateway and DNS `10.6.9.1`), skip this: it keeps working once OPNsense owns `.1`. Only if it still uses DHCP: OPNsense DHCP (see 2.6 for which page) → static mapping `10.6.9.200` for its MAC, then renew DHCP or reboot it and check it got `.200`.
-- [ ] OPNsense → Firewall → NAT → Destination NAT → Add, once per forward you wrote down in 2.3: Interface **WAN**, Protocol TCP (or UDP), Destination **WAN address**, Destination port = its port, Redirect target IP **`10.6.9.200`**, same port. Save, **Apply**. Each one auto-creates its WAN rule.
+- [ ] OPNsense → Firewall → NAT → Destination NAT → Add, once per forward you wrote down in 2.3: Interface **WAN**, Protocol TCP (or UDP), Destination **WAN address**, Destination port = its port, Redirect target IP **`10.6.9.200`**, same port. **Firewall rule** field: choose **Register rule** (26.1+ defaults to *Manual*, which creates no pass rule and leaves the forward blocked). Save, **Apply**. Check Firewall → Rules → WAN now shows a linked pass rule for each forward.
 - [ ] From a phone on cellular: the old server's public addresses answer again. If they don't, check the DNS records (2.10 last step: IPv4 only, no AAAA).
 
 ## 2.5 OPNsense base setup (web UI)
@@ -157,7 +157,7 @@ ip -br addr show vmbr0                        # still 10.6.9.2/24; the host's ow
 |---|---|
 | General | Hostname `cobra-firewall`, domain `home.arpa`. Primary/secondary DNS: blank. **Untick** "Override DNS". Unbound: enabled. |
 | Time | Default NTP servers, your time zone |
-| WAN | Type DHCP. At the bottom, **untick "Block RFC1918 private networks"** (*the WAN side is Xfinity's `10.0.0.0/24`, so this would block your own upstream*). Keep "Block bogon networks" ticked. |
+| WAN | Type DHCP. At the bottom, **untick "Block private networks"** (older wizards: "Block RFC1918 Private Networks") (*the WAN side is Xfinity's `10.0.0.0/24`, so this would block your own upstream*). Keep "Block bogon networks" ticked. |
 | LAN | `10.6.9.1` / `24` (already set) |
 | Root password | Skip (already set) |
 | Reload | Yes |
@@ -175,7 +175,7 @@ Then:
 
 ## 2.6 DHCP reservations and DNS servers handed out
 
-OPNsense versions differ on which DHCP service is active for LAN. Use whichever page shows LAN **enabled**: **Services → Dnsmasq DNS & DHCP** (current versions; this build uses it) or **Services → ISC DHCPv4 → LAN** (older).
+OPNsense versions differ on which DHCP service is active for LAN. Use whichever page shows LAN **enabled**: **Services → Dnsmasq DNS & DHCP** (default since 26.1; this build uses it) or **Services → ISC DHCPv4 → LAN** (older installs; on 26.x ISC DHCP is only there if the `os-isc-dhcp` plugin is installed).
 
 > ⚠️ **Dnsmasq hands out its own address as DNS unless you tell it otherwise.** With no DHCP option set, every client gets `10.6.9.1` (OPNsense's Unbound) as its only DNS server. Unbound doesn't know any `cobra-*` name and skips both Pi-holes, so `\\cobra-stream` fails on every PC that uses DHCP. The **DHCP options** step below is what fixes it.
 

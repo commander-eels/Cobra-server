@@ -153,6 +153,7 @@ sudo /usr/local/sbin/gate-cert-deploy
 ```
 
 - Already ran `apt install lego`? Leave it or `sudo apt remove lego`; just always call `/usr/local/bin/lego`. If an earlier attempt left files in `/etc/lego`, move them aside first (`sudo mv /etc/lego /etc/lego-v4-old`).
+- Upgrading a box that already has lego **4.x** certificates in `/etc/lego`? Install the v5 binary, then run `sudo /usr/local/bin/lego migrate --path /etc/lego` once before anything else (it moves the files to the v5 layout; don't move them by hand). In v5, `--run-hook` and `--renew-hook` became `--deploy-hook`, `--days` became `--renew-days`, and hook variables are named `LEGO_HOOK_CERT_PATH` and so on (checked against go-acme.github.io/lego/migration/cli, Nov 2026).
 - lego 5 has no `renew` command: `lego run` on an existing certificate renews it only when it's due, and says "Skip renewal" otherwise.
 - `songofeo.com.crt` already contains the full chain, which is what nginx wants as `fullchain.pem`.
 - `--dns.resolvers 9.9.9.9:53`: lego checks the challenge record against public DNS, not the Pi-holes, which answer every `songofeo.com` name with the gate's LAN address.
@@ -900,5 +901,5 @@ EOF
 - Later, Homepage widgets can show live numbers (Jellyfin streams, Pi-hole blocks, Proxmox load). Each needs an API key in `services.yaml`; see Homepage's docs per service.
 - [ ] Proxmox → Datacenter → Notifications: SMTP target with your email
 - [ ] OPNsense → System → Firmware: check updates weekly; Proxmox/Debian: `apt full-upgrade` weekly
-- [ ] Container updates, weekly, as podsvc on the gate and on the SGIN: `podman auto-update --dry-run` lists which images have a newer version; `podman auto-update` pulls them and restarts those containers (and rolls a container back if it fails to start). Read the release notes for Authelia, Paperless and RomM first; they occasionally change their config between major versions.
+- [ ] Container updates, weekly, as podsvc on the gate and on the SGIN: `podman auto-update --dry-run` lists which images have a newer version; `podman auto-update` pulls them and restarts those containers (and rolls a container back if it fails to start). Read the release notes for Authelia, Paperless, RomM, Jellyfin and Navidrome first; they occasionally change their config or database between major versions. Current versions and known upgrade traps: [VERSIONS.md](../VERSIONS.md) (Jellyfin 12 checklist, Navidrome 0.64 database backup).
 - [ ] Pi-hole #1 → Settings → Teleporter export → import on Pi-hole #2 after list changes
