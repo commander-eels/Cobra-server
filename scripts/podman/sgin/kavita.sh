@@ -28,8 +28,103 @@ SECTIONS_FILE=$COBRA_CONF/kavita-books.sections
 COMICS_DATA=$STREAM_DATA/kavita
 
 preflight
-need_folders "$COMICS_DIR" "$RPG_DIR"
-stream_pod
+
+# Inside its container Kavita always listens on 5000. A pod is one shared network, so two Kavitas can't sit in
+# the same pod. Comics stays in the stream pod as before; books and rpg each get a small pod of their own that
+# publishes a different LAN port onto their 5000. (That also avoids re-making the stream pod, which would stop
+# every app in it.) nftables must allow 5001 and 5002 from the LAN and WireGuard (manual part 3.7).
+case $INSTANCE in
+  comics)
+    NAME=kavita; DATA=$COMICS_DATA; PORT=5000
+    need_folders "$COMICS_DIR"
+    stream_pod; POD=$STREAM_POD
+    # This instance used to see every drive. If its database still has a library outside the comics folder
+    # (the RPG Vault, say), the narrower mount below would hide it, so stop until that library has moved to
+    # its own instance and been removed here. ALLOW_NARROW=1 skips the check once you've looked yourself.
+    if [ "${ALLOW_NARROW:-0}" != 1 ] && [ -f "$DATA/kavita.db" ]; then
+      command -v sqlite3 >/dev/null \
+        || die "sqlite3 isn't installed, so I can't check Comics' libraries. In its UI (Admin -> Libraries) check only /media/$COMICS_DIR is left, then: ALLOW_NARROW=1 $0 comics"
+      other=$(sqlite3 -readonly "$DATA/kavita.db" "SELECT Path FROM FolderPath WHERE Path NOT LIKE '/media/$COMICS_DIR%';") \
+        || die "couldn't read $DATA/kavita.db. In Comics' UI (Admin -> Libraries) check only /media/$COMICS_DIR is left, then: ALLOW_NARROW=1 $0 comics"
+      [ -z "$other" ] || die "Comics still has libraries outside /media/$COMICS_DIR:
+$(sed 's/^/         /' <<<"$other")
+       Move them first (./kavita.sh books / COPY_FROM_COMICS=1 ./kavita.sh rpg), delete them in Comics' Admin -> Libraries
+       (that only drops them from Comics' database; the files are read-only and stay), then run this again"
+    fi
+    # The same path inside as before (/media/<drive>/comics), so the Comics library keeps all its series.
+    MOUNTS=(-v "$DISKS/$COMICS_DIR:/media/$COMICS_DIR:ro")
+    ;;
+
+  rpg)
+    NAME=kavita-rpg; DATA=$STREAM_DATA/kavita-rpg; PORT=5002
+    need_folders "$RPG_DIR"
+    ensure_pod kavita-rpg "$PORT:5000"; POD=kavita-rpg
+    ensure_dir "$DATA"
+    if [ "${COPY_FROM_COMICS:-0}" = 1 ]; then
+      [ ! -e "$DATA/kavita.db" ] || die "$DATA already has a Kavita database; COPY_FROM_COMICS only starts an empty one. Nothing changed."
+      [ -f "$COMICS_DATA/kavita.db" ] || die "no comics database at $COMICS_DATA/kavita.db to copy from"
+      # The copy is cut loose from Comics afterwards (below), and that needs sqlite3. Checked before anything stops.
+      command -v sqlite3 >/dev/null || die "sqlite3 isn't installed (as eels: sudo apt install sqlite3). Nothing changed."
+      say "copying Comics' settings into $DATA (Comics is stopped for the copy so its database is consistent)"
+      podman stop kavita >/dev/null
+      # podman unshare: some files belong to podsvc's sub-UIDs; inside unshare podsvc can read and copy them all.
+      # The cover cache and logs are left out: Kavita rebuilds them.
+      if ! podman unshare sh -c 'cd "$1" && tar --exclude=./logs --exclude=./cache -cf - . | tar -C "$2" -xpf -' sh "$COMICS_DATA" "$DATA"; then
+        podman start kavita >/dev/null
+        die "the copy failed (lines above). Comics is running again and untouched; empty $DATA before trying again"
+      fi
+      podman start kavita >/dev/null
+      # Every instance of an app is walled, so the copy must not keep a single live secret in common with Comics.
+      # A copy starts with Comics' signing key and every user's API key, which would let a Comics sign-in or a
+      # Comics OPDS link open the RPG Vault too. Replace all of them, and drop the copied sign-in sessions:
+      #   TokenKey (appsettings.json)  signs every sign-in token: a new random key, so Comics' tokens don't work here
+      #   AspNetUsers.ApiKey           each user's OPDS / API key: a new one each (same 32-hex format Kavita makes)
+      #   AspNetUserTokens             saved refresh tokens: deleted, so everyone signs in to the RPG Vault afresh
+      # The accounts themselves stay (names, passwords, roles, RPG progress); from here on they're separate copies.
+      key=$(head -c 64 /dev/urandom | base64 -w0)
+      podman unshare sed -i -E "s|(\"TokenKey\"[[:space:]]*:[[:space:]]*\")[^\"]*\"|\1$key\"|" "$DATA/appsettings.json" \
+        && podman unshare grep -qF "$key" "$DATA/appsettings.json" \
+        || die "couldn't set a new TokenKey in $DATA/appsettings.json. Don't start kavita-rpg; empty $DATA and try again"
+      podman unshare sqlite3 "$DATA/kavita.db" \
+        "UPDATE AspNetUsers SET ApiKey = lower(hex(randomblob(16))); DELETE FROM AspNetUserTokens;" \
+        || die "couldn't give the copied users new API keys. Don't start kavita-rpg; empty $DATA and try again"
+      say "cut loose from Comics: new signing key, new API key per user, no copied sessions"
+      COPIED=1
+    fi
+    # The same path inside as the shared instance used, so a copied RPG Vault library still finds its files.
+    MOUNTS=(-v "$DISKS/$RPG_DIR:/media/$RPG_DIR:ro")
+    ;;
+
+  books)
+    NAME=kavita-books; DATA=$STREAM_DATA/kavita-books; PORT=5001
+    need_folders "$BOOKS_DIR"
+    # The RPG folder sits inside the books folder; it belongs to ./kavita.sh rpg and never to Books.
+    rpg_here=; [ "${RPG_DIR%/*}" = "$BOOKS_DIR" ] && rpg_here=${RPG_DIR##*/}
+    if [ ! -s "$SECTIONS_FILE" ]; then
+      # First run: list every folder under BOOKS_DIR except the RPG one, and stop so you can check the list.
+      # An explicit list is the wall: a folder added later (or one with private files) never shows up by itself.
+      find "$DISKS/$BOOKS_DIR" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort \
+        | { grep -vxF "${rpg_here:-//none//}" || true; } > "$SECTIONS_FILE"
+      say "wrote $SECTIONS_FILE, the bookstore sections Books will see:"
+      sed 's/^/      /' "$SECTIONS_FILE"
+      die "check that list (delete any line Books shouldn't see; # starts a comment), then run ./kavita.sh books again"
+    fi
+    ensure_pod kavita-books "$PORT:5000"; POD=kavita-books
+    MOUNTS=(); SECTIONS=()
+    while IFS= read -r s || [ -n "$s" ]; do
+      s=${s%%#*}; s=${s%"${s##*[![:space:]]}"}; [ -n "$s" ] || continue   # skip blank lines and # comments
+      case $s in */*|.|..|*:*) die "'$s' in $SECTIONS_FILE: one plain folder name per line (no slashes or colons)" ;; esac
+      [ "$s" != "$rpg_here" ] || die "'$s' is the RPG Vault's folder; it belongs to ./kavita.sh rpg. Remove it from $SECTIONS_FILE"
+      [ -d "$DISKS/$BOOKS_DIR/$s" ] || die "$DISKS/$BOOKS_DIR/$s doesn't exist (listed in $SECTIONS_FILE)"
+      MOUNTS+=(-v "$DISKS/$BOOKS_DIR/$s:/media/$BOOKS_DIR/$s:ro")
+      SECTIONS+=("$s")
+    done < "$SECTIONS_FILE"
+    [ ${#SECTIONS[@]} -gt 0 ] || die "$SECTIONS_FILE lists no sections"
+    ;;
+
+  *) die "usage: $0 [comics|books|rpg]" ;;
+esac
+
 ensure_dir "$DATA"
 keep_personal_state "$NAME"
 
@@ -37,9 +132,24 @@ run_container "$NAME" "$POD" "$IMAGE" \
   -v "$DATA:/kavita/config:Z" \
   "${MOUNTS[@]}"
 
-wait_port 5000 60 || warn "Kavita isn't answering on :5000 yet; check podman logs kavita"
-snapshot_personal_state kavita
-done_msg kavita http://10.6.9.20:5000
-echo "    Once: first visit creates the admin, then Libraries -> add 'Comics' (type Comic) with folder /media/$COMICS_DIR"
-echo "    RPG Vault: Libraries -> add 'RPG Vault' (type Book, so PDFs open in the PDF reader) with folder /media/$RPG_DIR."
-echo "          One folder per game system (e.g. /media/$RPG_DIR/<Game System>/<Book>.pdf); tick the library per user."
+wait_port "$PORT" 60 || warn "$NAME isn't answering on :$PORT yet; check podman logs $NAME"
+snapshot_personal_state "$NAME"
+done_msg "$NAME" "http://10.6.9.20:$PORT"
+case $INSTANCE in
+  comics)
+    echo "    Once: first visit creates the admin, then Libraries -> add 'Comics' (type Comic) with folder /media/$COMICS_DIR" ;;
+  rpg)
+    if [ "${COPIED:-0}" = 1 ]; then
+      echo "    Copied from Comics: same accounts, and the RPG Vault library with everyone's progress."
+      echo "    Here, delete the Comics library (Admin -> Libraries; it can't see the comics anyway). Keep 'RPG Vault'."
+      echo "    Then in Comics (:5000) delete 'RPG Vault', and run ./kavita.sh comics to narrow its folders."
+    else
+      echo "    Once: first visit creates the admin, then Libraries -> add 'RPG Vault' (type Book, so PDFs open in the PDF reader)"
+      echo "          with folder /media/$RPG_DIR. One folder per game system; tick the library per user."
+    fi ;;
+  books)
+    echo "    Once: first visit creates the admin, then Libraries -> Add, one library per bookstore section (type Book):"
+    for s in "${SECTIONS[@]}"; do echo "      $s  ->  /media/$BOOKS_DIR/$s"; done
+    echo "    Inside a section, filter or sort by Writers to shelve by author."
+    echo "    New section later: add its folder name to $SECTIONS_FILE, run ./kavita.sh books again, then add its library." ;;
+esac

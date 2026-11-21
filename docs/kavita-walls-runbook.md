@@ -8,7 +8,7 @@ The owner's call (2026-11-21): e-books leave Calibre-Web Automated (CWA) for Kav
 | `kavita-books` (Books) | 5001, pod `kavita-books` | the folders listed in `~/.config/cobra/kavita-books.sections`, all under `dock1a/books` | one per bookstore section, shelved by author inside |
 | `kavita-rpg` (RPG Vault) | 5002, pod `kavita-rpg` | `dock1a/books/RPG Books` | RPG Vault |
 
-Each instance has its own accounts, sign-in and database, and mounts only its own folders **read-only**. An instance can't show a book it can't see, and no Kavita can move, rename or delete a file. Talk Radio & Comedy Club and The Archives already have walls of their own (`navidrome-talk.sh`, `navidrome-archives.sh`), so nothing changes for them here.
+**Standing rule (the owner, 2026-11-21): every instance of the same app is walled.** Each Kavita has its own config folder, database, accounts, signing key, API keys, pod and port, and mounts only its own folders **read-only**. Nothing is shared live between them. An instance can't show a book it can't see, and no Kavita can move, rename or delete a file. Talk Radio & Comedy Club and The Archives already have walls of their own (their own Audiobookshelf instances), so nothing changes for them here.
 
 The order matters. Calibre-Web still serves `books.songofeo.com` and the website's Library Bay (it reads CWA's OPDS catalog, `web/app/eo-api.js` in Project-Eo). So Kavita Books goes up first, the gate and the website move to it, and only then is CWA removed.
 
@@ -37,6 +37,8 @@ sudo nft list ruleset | grep -o 'dport {[^}]*}'                       # should n
 ## 2. Move the RPG Vault into its own Kavita
 
 Right now the RPG Vault is a library inside the comics Kavita. This copies comics' settings into a new, empty instance, so the accounts and everyone's RPG reading progress come along. Comics is stopped for a few seconds during the copy.
+
+Right after the copy, the script cuts the RPG instance loose from Comics. It sets a new signing key (`TokenKey`), gives every user a new API key (their OPDS links), and deletes the copied sign-in sessions. A Comics sign-in or OPDS link then can't open the RPG Vault. From that point the two are separate copies that share nothing. People sign in to the RPG Vault again, with the same passwords until they change them there, and anyone using an OPDS app copies their new RPG link from Kavita's settings. If you'd rather start the RPG Vault completely blank (new accounts, no reading progress carried over), run `./kavita.sh rpg` without `COPY_FROM_COMICS`, then add the library and the users by hand.
 
 ```bash
 COPY_FROM_COMICS=1 ./kavita.sh rpg     # makes pod kavita-rpg on :5002 and copies comics' settings (not its cover cache or logs)
