@@ -4,7 +4,7 @@ Phones and the TV on the Xfinity side (`Electronomicon`, `10.0.0.x`) open the st
 `https://<name>.songofeo.com` addresses and get the gate sign-in (Authelia), the same as everyone
 else. WireGuard stays for when you're away from home.
 
-Risk accepted by the owner on 2026-11-21: on the home Wi-Fi a password (Authelia) is the protection,
+Risk accepted by the owner on 2026-11-21 ([decision log](../security/decision-log.md)): on the home Wi-Fi a password (Authelia) is the protection,
 not a tunnel. When the EAP772 access point arrives ([manual 2.10b](../manual/02-networking.md)),
 the phone moves to the cobra Wi-Fi and the "Undo" list at the bottom closes this again.
 
