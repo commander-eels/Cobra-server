@@ -3,8 +3,11 @@
 # Skips the radio unless radio.liq is in place.
 set -euo pipefail
 here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-for s in jellyfin ersatztv navidrome navidrome-talk navidrome-archives audiobookshelf; do
-  "$here/$s.sh"
+# navidrome-talk and navidrome-archives are retired (2026-11-18): Talk Radio & Comedy and The Archives are
+# Audiobookshelf libraries now. Their scripts and data stay, so ./navidrome-talk.sh brings one back if wanted.
+# Do not stop those two containers until 90-verify-gate.sh reports the Audiobookshelf library walls are clean.
+for s in jellyfin ersatztv navidrome audiobookshelf kavita romm; do
+  bash "$here/$s.sh"
   echo
 done
 # The three walled Kavitas. A Kavita that stops (comics still holding the RPG Vault, books' section list not

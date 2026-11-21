@@ -12,7 +12,7 @@ IMAGE=${ABS_IMAGE:-ghcr.io/advplyr/audiobookshelf:latest}
 DATA=$STREAM_DATA/abs
 
 preflight
-need_folders "$BOOKS_DIR" "$AUDIOBOOKS_DIR" "$COMEDY_DIR" "$SESSIONS_DIR"
+need_folders "$BOOKS_DIR" "$AUDIOBOOKS_DIR" "$COMEDY_DIR" "$ARCHIVES_DIR" "$SESSIONS_DIR"
 stream_pod
 ensure_dir "$DATA/config" "$DATA/metadata"
 keep_personal_state audiobookshelf
@@ -28,4 +28,8 @@ wait_port 13378 60 || warn "Audiobookshelf isn't answering on :13378 yet; check 
 snapshot_personal_state audiobookshelf
 done_msg audiobookshelf http://10.6.9.20:13378
 echo "    Once: first visit creates the admin, then Libraries -> add 'Audiobooks' (/media/$AUDIOBOOKS_DIR) and 'Books' (/media/$BOOKS_DIR, type Books),"
-echo "          'Comedy' (/media/$COMEDY_DIR, type Book) and 'Sessions' (/media/$SESSIONS_DIR, type Podcast)"
+echo "          'Talk Radio & Comedy Club' (/media/$COMEDY_DIR), 'The Archives' (/media/$ARCHIVES_DIR) and 'Sessions' (/media/$SESSIONS_DIR, type Podcast)."
+echo "          Talk and Archives: type Book for comedy CDs/specials and recorded shows (one item per folder, a saved spot"
+echo "          and bookmarks per person), or type Podcast for shows you follow by RSS feed. The concourse finds them by those exact names."
+echo "          Then on the gate: podman secret abs-api-token (README-v2) and 90-verify-gate.sh. Do not stop the old"
+echo "          navidrome-talk or navidrome-archives until that check prints no WARN."

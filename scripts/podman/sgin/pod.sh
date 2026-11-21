@@ -5,8 +5,8 @@
 #
 #   8096 Jellyfin   8409 ErsatzTV   13378 Audiobookshelf   5000 Kavita
 #   4533 Navidrome (one instance, a library per person: music. and mustang.)
-#   4534 Navidrome, Talk Radio & Comedy Club (navidrome-talk.sh: talk. and comedy.)
-#   4535 Navidrome, The Archives (navidrome-archives.sh: archives.)
+#   4534 (retired 2026-11-18: was the Talk Radio & Comedy Club Navidrome; talk. is Audiobookshelf now)
+#   4535 (retired 2026-11-18: was The Archives Navidrome; archives. is Audiobookshelf now)
 #   8080 RomM       8000  Icecast (radio, part 8)
 # Not in this pod: Kavita books :5001 and Kavita rpg :5002 (kavita.sh), each in a pod of its own.
 STREAM_POD=stream
