@@ -13,6 +13,10 @@ one Destination NAT rule on OPNsense, open only to the home Xfinity network. Not
 
 Do every step on **the-box**, in the OPNsense web page.
 
+## 0. SGIN firewall first
+
+The SGIN only accepts 8096 from the cobra LAN and WireGuard. Run `F37-sgin-firewall-roku-tv.sh` from the cobra-fix v3.1 zip first (see [home-wifi 7b](../home-wifi/README.md#7b-roku-stays-on-the-xfinity-router-or-wi-fi)).
+
 ## 1. Let private addresses in on WAN
 
 Interfaces > WAN: untick **Block private networks**, then **Save** and **Apply**.
@@ -32,18 +36,18 @@ Firewall > NAT > Destination NAT, then **+**.
 | Destination port | `8096` |
 | Redirect target IP | `10.6.9.20` |
 | Redirect target port | `8096` |
-| Filter rule association | Add associated filter rule |
+| Firewall rule (26.1+, replaces "Filter rule association") | **Register rule** (the default, Manual, makes no pass rule and the TV stays blocked) |
 | Description | `Roku to Jellyfin` |
 
 **Save**, then **Apply**.
 
 ## 3. Check the rule
 
-Firewall > Rules > WAN should list **Roku to Jellyfin** above any block rules.
+Firewall > Rules, with WAN selected and **Inspect** on: **Roku to Jellyfin** appears under the automatically generated rules. If it's missing, the Destination NAT rule is still on Manual.
 
-## 4. Test from the-box
+## 4. Test from the phone on Electronomicon
 
-Turn PIA off first (it moves traffic off the local network). Then open:
+Not from the-box: it's on the LAN side, where `10.0.0.2:8096` doesn't loop back. With WireGuard off on the phone, open:
 
 ```
 http://10.0.0.2:8096

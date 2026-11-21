@@ -28,16 +28,31 @@ the phone moves to the cobra Wi-Fi and the "Undo" list at the bottom closes this
 | Jellyfin | `10.6.9.20:8096` |
 
 Do steps 1 to 5 on **the-box**, in the OPNsense page at `https://10.6.9.1` in your normal browser.
+
+**Menu names match OPNsense 26.1 to 26.7** (checked 2026-11-21 against the
+[26.1](https://docs.opnsense.org/releases/CE_26.1.html) and [26.7](https://docs.opnsense.org/releases/CE_26.7.html)
+release notes). First check your exact build: **System → Firmware → Status**. Changes that matter here:
+
+| Change | Since | What it means for these steps |
+|---|---|---|
+| Port Forward renamed **Destination NAT** | 26.1 | Firewall → NAT → Destination NAT |
+| "Filter rule association" removed; the rule option is now **Manual / Pass / Register rule**, default **Manual** (no pass rule made) | 26.1 | Pick **Register rule** on a new Destination NAT rule, or nothing lets the traffic in |
+| New rules page (MVC) is the default **Firewall → Rules**; one page, pick **WAN** in its interface selector. Old per-interface pages are the `os-firewall-legacy` plugin | 26.7 | "Firewall → Rules, WAN" below means that page with WAN selected |
+| Unbound Access Lists: some upgrades to 26.1.6 flipped the default action to **Deny** | 26.1.6 | Always add the explicit `10.0.0.0/24` Allow entry (step 3) and test it |
+| Interface settings moved onto the assignments page (MVC); old page still there for now | 26.7.6 | If **Interfaces → [WAN]** looks different, look for the WAN entry under **Interfaces → Assignments** |
+
+If a field name on your screen doesn't match these steps, stop and tell Claude what the screen shows.
 Step 6 is the phone. Step 7 is the TV, two ways.
 
 ## 1. Look first (read-only)
 
 Write down what you see; change nothing yet.
 
+- [ ] **System → Firmware → Status**: note the version (for example 26.7.6).
 - [ ] **Interfaces → [WAN]**: is **Block private networks** ticked? Is **Block bogon networks** ticked?
 - [ ] **Firewall → NAT → Destination NAT**: the 443 → `10.6.9.10` rule. **Destination** should be **WAN address**
       (covers both the public IP and `10.0.0.2`). **Source** should be **any**.
-- [ ] **Firewall → Rules → WAN**: "Allow 443 to gate" has **Source any**. Note any rule with port 53 already there.
+- [ ] **Firewall → Rules**, WAN selected: "Allow 443 to gate" has **Source any**. Also note the 443 Destination NAT rule's rule option (Manual / Pass / Register rule). Note any rule with port 53 already there.
 - [ ] **Services → Unbound DNS → General → Network Interfaces**: *All*, or a list (which ones?).
 - [ ] **Services → Unbound DNS → Access Lists**: note any entries.
 - [ ] **Services → Unbound DNS → Overrides**: note any `songofeo.com` entries.
@@ -135,7 +150,7 @@ Resolve-DnsName www.songofeo.com -DnsOnly
 
 ## 5. WAN rule: DNS from the Xfinity side only
 
-- [ ] **Firewall → Rules → WAN → +**:
+- [ ] **Firewall → Rules**, WAN selected → **+**:
 
 | Field | Set to |
 |---|---|
@@ -248,7 +263,7 @@ Optional, so Jellyfin doesn't cap the TV's bitrate as "remote": Jellyfin Dashboa
 Disable, don't delete, so each one can be turned back on:
 
 1. Phone: Electronomicon IP settings back to **DHCP**; join the cobra Wi-Fi instead.
-2. OPNsense: Firewall → Rules → WAN → `Xfinity side DNS`: disable. Apply.
+2. OPNsense: Firewall → Rules, WAN selected → `Xfinity side DNS`: disable. Apply.
 3. Unbound → Overrides: disable the `home Wi-Fi` entries. Unbound → Access Lists: disable `xfinity-side`. Apply.
 4. Unbound → General → Network Interfaces: remove WAN (only if you added it in step 3).
 5. Interfaces → [WAN]: tick **Block private networks** again, but only once nothing on the Xfinity side needs
