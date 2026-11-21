@@ -19,9 +19,9 @@ Interfaces > WAN: untick **Block private networks**, then **Save** and **Apply**
 
 If you skip this, OPNsense drops everything coming from `10.0.0.x`.
 
-## 2. Add the port forward
+## 2. Add the Destination NAT rule (the port forward)
 
-Firewall > NAT > Port Forward, then **+**.
+Firewall > NAT > Destination NAT, then **+**.
 
 | Field | Set to |
 |---|---|

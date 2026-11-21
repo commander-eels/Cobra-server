@@ -17,7 +17,7 @@ OPNsense is a FreeBSD-based firewall distro managed from a web UI. You configure
 | **WAN / LAN** | Interface roles. WAN = `vtnet0` (plugged into `vmbr1` → USB NIC → Xfinity). LAN = `vtnet1` (plugged into `vmbr0` → onboard NIC → switch). |
 | **Console menu** | Text menu on the VM's screen (Proxmox → 100 → Console). Options 1 (assign interfaces) and 2 (set IP) rescue you if the web UI is unreachable. |
 | **Rules** | Firewall → Rules → per interface. Default: LAN may go anywhere, WAN blocks all inbound. Rules are evaluated on the interface where traffic **enters**. |
-| **NAT → Port Forward** | Inbound forwards (TCP 443 to the gate, in part 5). Creating one auto-creates its WAN pass rule. |
+| **NAT → Destination NAT** (older versions: Port Forward) | Inbound forwards (TCP 443 to the gate, in part 5). Creating one auto-creates its WAN pass rule. |
 | **Unbound** | OPNsense's DNS resolver. Here it forwards to Cloudflare/Quad9 over TLS (port 853). Pi-hole uses it as its upstream. |
 | **Plugins** | Extra packages: System → Firmware → Plugins. You need `os-ddclient` and `os-crowdsec`. |
 | **Apply** | Most pages need **Save** *and then* **Apply changes** (a yellow banner). Nothing takes effect until you apply. |
@@ -143,7 +143,7 @@ ip -br addr show vmbr0                        # still 10.6.9.2/24; the host's ow
 **5. Keep the old server reachable until part 5 replaces it:**
 
 - [ ] Old server on **`10.6.9.200`**. If it's already set to `.200` on the box itself (yours is, with gateway and DNS `10.6.9.1`), skip this: it keeps working once OPNsense owns `.1`. Only if it still uses DHCP: OPNsense DHCP (see 2.6 for which page) → static mapping `10.6.9.200` for its MAC, then renew DHCP or reboot it and check it got `.200`.
-- [ ] OPNsense → Firewall → NAT → Port Forward → Add, once per forward you wrote down in 2.3: Interface **WAN**, Protocol TCP (or UDP), Destination **WAN address**, Destination port = its port, Redirect target IP **`10.6.9.200`**, same port. Save, **Apply**. Each one auto-creates its WAN rule.
+- [ ] OPNsense → Firewall → NAT → Destination NAT → Add, once per forward you wrote down in 2.3: Interface **WAN**, Protocol TCP (or UDP), Destination **WAN address**, Destination port = its port, Redirect target IP **`10.6.9.200`**, same port. Save, **Apply**. Each one auto-creates its WAN rule.
 - [ ] From a phone on cellular: the old server's public addresses answer again. If they don't, check the DNS records (2.10 last step: IPv4 only, no AAAA).
 
 ## 2.5 OPNsense base setup (web UI)
