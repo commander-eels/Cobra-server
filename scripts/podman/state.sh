@@ -23,7 +23,7 @@ fi
 
 state_app_names() {
   case $1 in
-    sgin) printf '%s\n' jellyfin navidrome navidrome-talk navidrome-archives audiobookshelf kavita romm calibre-web ersatztv radio cobra-breaks ;;
+    sgin) printf '%s\n' jellyfin navidrome navidrome-talk navidrome-archives audiobookshelf kavita kavita-books kavita-rpg romm calibre-web ersatztv radio cobra-breaks ;;
     gate) printf '%s\n' authelia vaultwarden paperless metube homepage uptime-kuma hiscore eo-art eo-account forms ;;
     *) return 1 ;;
   esac
@@ -36,7 +36,7 @@ state_load() {
   STATE_DB=files
   STATE_NOTES=
   case $name in
-    jellyfin|navidrome|navidrome-talk|navidrome-archives|audiobookshelf|kavita|romm|calibre-web|ersatztv|radio|cobra-breaks)
+    jellyfin|navidrome|navidrome-talk|navidrome-archives|audiobookshelf|kavita|kavita-books|kavita-rpg|romm|calibre-web|ersatztv|radio|cobra-breaks)
       STATE_HOST=sgin
       STATE_BASE=${COBRA_DATA:-/srv/stream}
       ;;
@@ -75,7 +75,7 @@ state_marker_file() {
         printf '%s\n' "$STATE_DATA/config/audiobookshelf.sqlite"
       fi
       ;;
-    kavita) printf '%s\n' "$STATE_DATA/kavita.db" ;;
+    kavita|kavita-books|kavita-rpg) printf '%s\n' "$STATE_DATA/kavita.db" ;;
     romm) printf '%s\n' "$STATE_DATA/db/ibdata1" ;;
     calibre-web) printf '%s\n' "$STATE_DATA/app.db" ;;
     eo-account) printf '%s\n' "$STATE_DATA/data/apps.json" ;;
@@ -497,7 +497,7 @@ fill_state() {
     jellyfin) fill_jellyfin || rc=1 ;;
     navidrome|navidrome-talk|navidrome-archives) fill_navidrome || rc=1 ;;
     audiobookshelf) fill_audiobookshelf || rc=1 ;;
-    kavita) fill_kavita || rc=1 ;;
+    kavita|kavita-books|kavita-rpg) fill_kavita || rc=1 ;;
     romm) fill_romm || rc=1 ;;
     ersatztv) fill_ersatztv || rc=1 ;;
     radio) fill_radio || rc=1 ;;
