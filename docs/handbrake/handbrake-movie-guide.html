@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CR-HB Movie Encoding Field Guide</title>
+<style>
+  @page { size: Letter; margin: 0.55in 0.6in; background: #0e100e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0e100e; color: #d9e2d9; font: 10pt/1.42 Inter, "DejaVu Sans", sans-serif; }
+  h1, h2, h3, .mono, code, th { font-family: "DejaVu Sans Mono", monospace; }
+  h1 { color: #39ff6a; font-size: 22pt; margin: 0 0 4pt; letter-spacing: 1px; }
+  h2 { color: #39ff6a; font-size: 13.5pt; margin: 18pt 0 6pt; padding: 3pt 0 3pt 8pt; border-left: 4pt solid #39ff6a; break-after: avoid; }
+  h3 { color: #ffd23f; font-size: 10.5pt; margin: 11pt 0 4pt; break-after: avoid; }
+  p { margin: 4pt 0 6pt; }
+  code { color: #ffd23f; font-size: 9pt; }
+  a { color: #7fd8ff; text-decoration: none; }
+  table { width: 100%; border-collapse: collapse; margin: 5pt 0 9pt; font-size: 9pt; break-inside: auto; }
+  tr { break-inside: avoid; }
+  th { background: #1b2a1d; color: #39ff6a; text-align: left; font-size: 8.5pt; font-weight: bold; padding: 4pt 6pt; border: 1px solid #2f4a33; }
+  td { padding: 4pt 6pt; border: 1px solid #2a352b; vertical-align: top; }
+  td.set { color: #ffd23f; font-weight: 600; white-space: nowrap; }
+  td.k { color: #fff; font-weight: 600; white-space: nowrap; }
+  .page { break-before: page; }
+  .bracket { border: 1px solid #2f4a33; padding: 10pt 12pt; margin: 8pt 0; position: relative; }
+  .tag { display: inline-block; font: bold 7.5pt "DejaVu Sans Mono", monospace; padding: 1pt 5pt; margin-right: 5pt; border: 1px solid; vertical-align: 1px; }
+  .ok { color: #39ff6a; border-color: #39ff6a; }
+  .warn { color: #ffd23f; border-color: #ffd23f; }
+  .bad { color: #ff4b5a; border-color: #ff4b5a; }
+  .box { border: 1px solid #2f4a33; background: #131a14; padding: 7pt 10pt; margin: 7pt 0; break-inside: avoid; }
+  .box.y { border-color: #6b5a1c; background: #19170e; }
+  .box.r { border-color: #6b2a30; background: #1a1012; }
+  .box b.h { font-family: "DejaVu Sans Mono", monospace; font-size: 8.5pt; letter-spacing: .5px; }
+  .box.y b.h { color: #ffd23f; } .box.r b.h { color: #ff4b5a; } .box b.h { color: #39ff6a; }
+  ol, ul { margin: 3pt 0 7pt 16pt; padding: 0; } li { margin: 2pt 0; }
+  .cover-sub { color: #9fb39f; font-size: 11pt; margin-bottom: 14pt; }
+  .meta { font: 8.5pt "DejaVu Sans Mono", monospace; color: #7c8f7c; border-top: 1px solid #2f4a33; border-bottom: 1px solid #2f4a33; padding: 4pt 0; margin: 8pt 0 14pt; }
+  .toc td { border: none; border-bottom: 1px dotted #2a352b; padding: 2.5pt 4pt; }
+  .small { font-size: 8.5pt; color: #9fb39f; }
+</style>
+</head>
+<body>
+
+<!-- ===================== COVER / QUICK CARD ===================== -->
+<div class="mono" style="color:#ff4b5a;font-size:8.5pt;letter-spacing:2px">COBRA CORPORATE · REFERENCE CR-HB · INTERNAL</div>
+<h1>Movie Encoding Field Guide</h1>
+<div class="cover-sub">MakeMKV rip &rarr; HandBrake &rarr; web-optimized MP4 &rarr; Jellyfin direct play. Turning 5&ndash;10 GB MKVs into 2&ndash;4 GB MP4s that still look and sound great.</div>
+<div class="meta">ENCODER: the-box (Win11, RTX 3070) · SERVER: SGIN 10.6.9.20, Jellyfin, Intel N5095A Quick Sync · CLIENTS: Roku TV, phones, browsers, friends over the internet · 2026-11-21</div>
+
+<h2>Quick card: which preset?</h2>
+<table>
+<tr><th>Movie</th><th>Preset (in the Cobra folder)</th><th>Typical size, 2 h movie</th><th>Speed on the-box</th></tr>
+<tr><td>Almost everything (Blu-ray or 4K source)</td><td class="set">Cobra 1080p HEVC (~2 GB)</td><td>1.5&ndash;3 GB</td><td>Slow (CPU). Run overnight in the queue.</td></tr>
+<tr><td>A special movie you want in true 4K / HDR</td><td class="set">Cobra 4K HDR (~4 GB)</td><td>~3.9 GB (fixed by bitrate table)</td><td>Very slow (two passes, CPU)</td></tr>
+<tr><td>You want it tonight, not tomorrow</td><td class="set">Cobra 1080p NVENC Fast (~2.5 GB)</td><td>2&ndash;3.5 GB</td><td>Very fast (RTX 3070)</td></tr>
+<tr><td>A friend's player can't play H.265 (rare)</td><td class="set">Cobra 1080p H.264 Compatibility</td><td>2.5&ndash;4.5 GB</td><td>Medium (CPU)</td></tr>
+</table>
+<div class="small">Sizes are estimates. A quiet drama lands under 2 GB; a grainy war movie or a 3-hour epic lands higher. The 1080p presets aim at a <b>look</b> (constant quality), so size floats. Section 11 shows how to force an exact size.</div>
+
+<h3>What every Cobra preset does</h3>
+<table>
+<tr><th>Part</th><th>Setting</th><th>Why it fits our server</th></tr>
+<tr><td class="k">Container</td><td>MP4, Web Optimized, Align A/V Start</td><td>Starts playing instantly in browsers and apps; no out-of-sync start.</td></tr>
+<tr><td class="k">Video</td><td>H.265 10-bit (x265 slow, RF 22)</td><td>Half the size of H.264 at the same look. Roku 4K models, phones, Chrome and Edge play it without the server converting it.</td></tr>
+<tr><td class="k">Audio 1</td><td>AAC stereo 160 kbps</td><td>Plays on every device: phones, browsers, friends, TV speakers.</td></tr>
+<tr><td class="k">Audio 2</td><td>Dolby Digital (AC3) 5.1, copied if the disc has AC3 or E-AC3</td><td>Surround for the Roku and soundbar. Roku can't play DTS or TrueHD, so those are converted to AC3 640 kbps.</td></tr>
+<tr><td class="k">Subtitles</td><td>Forced subs (alien/foreign lines) burned in; English text subs kept as switchable</td><td>MP4 only holds text subs. See section 13 for disc (PGS) subtitles.</td></tr>
+<tr><td class="k">Chapters</td><td>On</td><td>Jellyfin chapter skipping and thumbnails.</td></tr>
+</table>
+
+<h3>Contents</h3>
+<table class="toc">
+<tr><td>1. Why these settings (server and players)</td><td>9. Filters tab</td></tr>
+<tr><td>2. Install the Cobra presets</td><td>10. Video tab</td></tr>
+<tr><td>3. Preferences to set once</td><td>11. Hitting an exact size (bitrate tables)</td></tr>
+<tr><td>4. MakeMKV: what to keep when ripping</td><td>12. Audio tab</td></tr>
+<tr><td>5. The HandBrake main window</td><td>13. Subtitles tab and the subtitle playbook</td></tr>
+<tr><td>6. Your encode, step by step</td><td>14. Chapters and Tags tabs</td></tr>
+<tr><td>7. Summary tab</td><td>15. 4K and HDR notes</td></tr>
+<tr><td>8. Dimensions tab</td><td>16. Into Jellyfin, check direct play, troubleshooting</td></tr>
+</table>
+
+<!-- ===================== 1 ===================== -->
+
+<h2>1. Why these settings</h2>
+<p>The goal is <b>direct play</b>: Jellyfin sends the file as it is and the player decodes it. When a player can't handle the video, audio or subtitles, the SGIN has to convert the movie live (a <i>transcode</i>). The SGIN's Intel N5095A can do that with Quick Sync, but it costs power, can stutter with burned-in subtitles, and limits how many people watch at once. Choosing the right formats at encode time avoids almost all of it.</p>
+
+<h3>The server</h3>
+<table>
+<tr><th>Item</th><th>Fact</th><th>What it means for encoding</th></tr>
+<tr><td class="k">Jellyfin host</td><td>SGIN, 10.6.9.20, Intel N5095A (Jasper Lake)</td><td>Quick Sync decodes H.264, H.265 8/10-bit and VP9. <b>No AV1 decode</b>, so don't make AV1 files yet.</td></tr>
+<tr><td class="k">Friends outside</td><td>Limited by Xfinity <i>upload</i> speed</td><td>A 2 GB / 2 h movie is about 2.2 Mbps; a 4 GB 4K movie about 4.5 Mbps. Both stream to friends without conversion. A 10 GB MKV (11+ Mbps) often won't.</td></tr>
+<tr><td class="k">Roku TV</td><td>Jellyfin Roku app, on the Xfinity side (http://10.0.0.2:8096)</td><td>See the player table below.</td></tr>
+<tr><td class="k">Encoder PC</td><td>the-box, Win11, RTX 3070</td><td>CPU for best quality (x265), NVENC for speed.</td></tr>
+</table>
+
+<h3>What each player can play directly</h3>
+<table>
+<tr><th>Player</th><th>H.265 10-bit</th><th>AAC</th><th>AC3 / E-AC3</th><th>DTS / TrueHD</th><th>Text subs (SRT)</th><th>Disc subs (PGS)</th></tr>
+<tr><td class="k">Roku TV, 4K model</td><td><span class="tag ok">YES</span></td><td><span class="tag ok">YES</span></td><td><span class="tag ok">YES</span> to TV/soundbar</td><td><span class="tag bad">NO</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">SERVER BURNS</span></td></tr>
+<tr><td class="k">Roku, HD-only model</td><td><span class="tag bad">NO</span> use H.264 preset</td><td><span class="tag ok">YES</span></td><td><span class="tag ok">YES</span></td><td><span class="tag bad">NO</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">SERVER BURNS</span></td></tr>
+<tr><td class="k">Android / iPhone app</td><td><span class="tag ok">YES</span></td><td><span class="tag ok">YES</span></td><td><span class="tag ok">MOSTLY</span></td><td><span class="tag warn">VARIES</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">VARIES</span></td></tr>
+<tr><td class="k">Chrome / Edge on PC</td><td><span class="tag ok">YES</span> (GPU decode)</td><td><span class="tag ok">YES</span></td><td><span class="tag warn">AUDIO CONVERTED</span></td><td><span class="tag bad">NO</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">SERVER BURNS</span></td></tr>
+<tr><td class="k">Firefox</td><td><span class="tag warn">OFTEN NO</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">AUDIO CONVERTED</span></td><td><span class="tag bad">NO</span></td><td><span class="tag ok">YES</span></td><td><span class="tag warn">SERVER BURNS</span></td></tr>
+</table>
+<div class="small">"Audio converted" is cheap (the server turns AC3 into AAC on the fly) and never the cause of stutter. That's why every preset puts AAC stereo first: it's the track browsers and phones pick. Check your Roku: <b>Settings &rarr; System &rarr; About</b>. If it says 4K or HDR, H.265 is fine.</div>
+
+<h3>Why not just keep the MKV, or use H.264 everywhere?</h3>
+<table>
+<tr><th>Choice</th><th>Result</th></tr>
+<tr><td class="k">Keep 5&ndash;10 GB MKV</td><td>DTS/TrueHD audio and PGS subs force conversion on Roku and browsers; too big for friends' streams.</td></tr>
+<tr><td class="k">H.264 at 2 GB</td><td>Visibly softer and blockier in dark or busy scenes than H.265 at 2 GB.</td></tr>
+<tr><td class="k">H.265 10-bit at 2 GB</td><td>Clean picture, no banding in skies and shadows, plays directly on our players. <span class="tag ok">CHOSEN</span></td></tr>
+<tr><td class="k">AV1</td><td>Even smaller, but the SGIN can't decode it in hardware and older Rokus can't play it. Revisit with new hardware.</td></tr>
+</table>
+
+<!-- ===================== 2 / 3 ===================== -->
+<h2>2. Install the Cobra presets</h2>
+<p>The file <code>cobra-handbrake-presets.json</code> sits next to this PDF (project files <code>handbrake/</code>, repo <code>docs/handbrake/</code>). It adds a folder named <b>Cobra</b> with all four presets. All four were test-encoded with HandBrake 1.7 (the NVENC one was checked for format only, since the test machine has no NVIDIA card). Newer HandBrake versions import it fine.</p>
+<ol>
+<li>On <b>the-box</b>, copy <code>cobra-handbrake-presets.json</code> to your Downloads folder.</li>
+<li>Open <b>HandBrake</b>. In the top menu bar click <b>Presets</b> (or the <b>Presets</b> button on the toolbar to show the side panel).</li>
+<li>Choose <b>Import</b> (Windows: Presets panel &rarr; <b>Options</b> or the &hellip; menu &rarr; <b>Import from file</b>), pick the JSON, click <b>Open</b>.</li>
+<li>A <b>Cobra</b> folder appears in the preset list. Right-click <b>Cobra 1080p HEVC (~2 GB)</b> &rarr; <b>Set as default</b>.</li>
+</ol>
+<div class="box y"><b class="h">IF YOU CHANGE A SETTING</b><br>Edits on the tabs only apply to the current movie. To keep them, Presets &rarr; <b>Save New Preset</b> (give it a new name) rather than overwriting the Cobra one, so you can always go back.</div>
+
+<h2>3. Preferences to set once</h2>
+<p>On the-box: HandBrake &rarr; <b>Tools</b> (or the gear) &rarr; <b>Preferences</b>.</p>
+<table>
+<tr><th>Section</th><th>Setting</th><th>Set to</th><th>What it does</th></tr>
+<tr><td class="k">Output Files</td><td>Automatically name output files</td><td class="set">On, format {source}</td><td>Keeps the MakeMKV name; rename to <code>Title (Year)</code> before Jellyfin.</td></tr>
+<tr><td class="k">Output Files</td><td>Default path</td><td class="set">A fast local drive</td><td>Encode to local disk, then copy to the server. Writing straight to the network share is slower and can fail mid-encode.</td></tr>
+<tr><td class="k">Output Files</td><td>MP4 file extension</td><td class="set">Always use MP4</td><td>Otherwise HandBrake may name it <code>.m4v</code>.</td></tr>
+<tr><td class="k">Video</td><td>Enable Nvidia NVENC / NVDEC</td><td class="set">NVENC on, NVDEC off</td><td>NVENC unlocks the Fast preset. NVDEC adds little and can trip some filters.</td></tr>
+<tr><td class="k">Advanced / System</td><td>Process priority</td><td class="set">Below Normal</td><td>the-box stays usable (and games run) while encoding.</td></tr>
+<tr><td class="k">Advanced / System</td><td>Prevent sleep while encoding</td><td class="set">On</td><td>Overnight queues don't stop halfway.</td></tr>
+<tr><td class="k">When Done</td><td>Action</td><td class="set">Do nothing</td><td>Or "Sleep" for overnight runs.</td></tr>
+</table>
+
+<!-- ===================== 4 ===================== -->
+
+<h2>4. MakeMKV: what to keep when ripping</h2>
+<p>HandBrake can only keep what MakeMKV saved. Ripping a little extra costs disk space for a day; forgetting a track means ripping the disc again.</p>
+<table>
+<tr><th>Track type</th><th>Keep</th><th>Skip</th><th>Why</th></tr>
+<tr><td class="k">Title</td><td>The main feature (longest, most chapters)</td><td>Trailers, menus, short clips</td><td>Some discs list many near-identical playlists. Pick the one MakeMKV marks with the right runtime and chapter count; if unsure, check the disc's title on the MakeMKV forum's playlist lists.</td></tr>
+<tr><td class="k">Video</td><td>The one video track</td><td>&mdash;</td><td>On 4K discs with Dolby Vision, MakeMKV keeps it in the same track.</td></tr>
+<tr><td class="k">Audio</td><td>English main track (TrueHD / DTS-HD / Atmos)</td><td>Other languages</td><td>Best source for the AC3 5.1 HandBrake makes.</td></tr>
+<tr><td class="k">Audio</td><td>English AC3 or E-AC3 core/track, if listed</td><td>&mdash;</td><td>HandBrake copies it straight across with no quality loss.</td></tr>
+<tr><td class="k">Audio</td><td>Commentary, only if you want it</td><td>Descriptive audio</td><td>Each extra track adds about 160&ndash;640 kbps.</td></tr>
+<tr><td class="k">Subtitles</td><td>All English tracks, <b>including "forced only"</b></td><td>Other languages</td><td>The forced track carries the foreign-language lines (aliens, other languages). Forgetting it is the usual cause of "nobody can read what they're saying".</td></tr>
+<tr><td class="k">Subtitles</td><td>English SDH (hearing impaired), if you use it</td><td>&mdash;</td><td>Becomes the switchable track.</td></tr>
+</table>
+<h3>Make MakeMKV pick these automatically</h3>
+<ol>
+<li>MakeMKV &rarr; <b>View &rarr; Preferences &rarr; General</b>: tick <b>Expert mode</b>.</li>
+<li><b>Language</b> tab: Preferred language <b>English</b> for both interface and tracks.</li>
+<li><b>Advanced</b> tab: Default selection rule. The built-in default (favourite language, plus forced subtitles) is a good start; check the list on every disc anyway, especially that the <b>(forced only)</b> subtitle line is ticked.</li>
+</ol>
+
+<!-- ===================== 5 / 6 ===================== -->
+<h2>5. The HandBrake main window</h2>
+<table>
+<tr><th>Control</th><th>What it does</th><th>Recommended</th></tr>
+<tr><td class="k">Open Source</td><td>Loads the MKV (or a folder for batch)</td><td>Pick the MakeMKV file. Use <b>Folder</b> for a batch.</td></tr>
+<tr><td class="k">Title</td><td>Which video inside the file</td><td>MakeMKV files have one title, so leave it.</td></tr>
+<tr><td class="k">Angle</td><td>Multi-angle discs only</td><td>1</td></tr>
+<tr><td class="k">Range</td><td>Encode only part: Chapters, Seconds or Frames</td><td>Full movie. For a size/speed test, set Seconds, e.g. 600 to 720.</td></tr>
+<tr><td class="k">Preset</td><td>Loads all tab settings at once</td><td class="set">Cobra preset (quick card, page 1)</td></tr>
+<tr><td class="k">Preview</td><td>Encodes a short clip so you can check picture and crop</td><td>Use it on any movie with black bars or HDR.</td></tr>
+<tr><td class="k">Save As</td><td>Output file name and folder</td><td><code>Movie Title (Year).mp4</code></td></tr>
+<tr><td class="k">Add to Queue</td><td>Saves this job with its settings</td><td>Queue several movies, start them before bed.</td></tr>
+<tr><td class="k">Start Encode</td><td>Begins encoding (or runs the queue)</td><td>&mdash;</td></tr>
+<tr><td class="k">Activity Log</td><td>Full log of the encode</td><td>Look here if something fails.</td></tr>
+</table>
+
+<h2>6. Your encode, step by step</h2>
+<ol>
+<li>On the-box, open HandBrake &rarr; <b>Open Source</b> &rarr; pick the MakeMKV <code>.mkv</code>.</li>
+<li>Preset: pick the Cobra preset from the quick card.</li>
+<li><b>Audio</b> tab: confirm two tracks (Stereo AAC, Surround 5.1) from the English main audio.</li>
+<li><b>Subtitles</b> tab: confirm what's listed. If the only English subs are PGS (disc subtitles), follow section 13 now, before you forget.</li>
+<li><b>Save As</b>: <code>Movie Title (Year).mp4</code> on a local drive.</li>
+<li><b>Add to Queue</b>. Repeat for other movies, then <b>Start Queue</b>.</li>
+<li>When done, play the MP4 once on the-box (VLC or Films &amp; TV): check picture, both audio tracks, subtitles.</li>
+<li>Copy to the SGIN movies folder and refresh the library (section 16).</li>
+</ol>
+
+<!-- ===================== 7 / 8 ===================== -->
+
+<h2>7. Summary tab</h2>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Format</td><td>Container: MP4, MKV or WebM</td><td class="set">MP4</td></tr>
+<tr><td class="k">Web Optimized</td><td>Puts the file's index at the front, so a player can start streaming before reading the whole file. Without it, some players download the whole movie first.</td><td class="set">On</td></tr>
+<tr><td class="k">Align A/V Start</td><td>Pads the very start so audio and video begin together. Fixes "audio is half a second off" in browsers.</td><td class="set">On</td></tr>
+<tr><td class="k">iPod 5G Support</td><td>Compatibility flag for a 2005 iPod</td><td class="set">Off</td></tr>
+<tr><td class="k">Passthru Common Metadata</td><td>Copies the title and similar tags from the source</td><td class="set">On (harmless; Jellyfin uses its own metadata)</td></tr>
+<tr><td class="k">Info panel</td><td>Shows the source and the output that the tabs will produce</td><td>Read it before queueing: resolution, tracks, subtitles.</td></tr>
+</table>
+
+<h2>8. Dimensions tab</h2>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Orientation / Rotate / Flip</td><td>Turns the picture</td><td class="set">0 / off</td></tr>
+<tr><td class="k">Cropping</td><td>Removes black bars. Automatic detects them; Conservative crops less; None keeps everything; Custom is manual.</td><td class="set">Automatic</td></tr>
+<tr><td class="k">Resolution Limit</td><td>Largest size the output may be</td><td class="set">1080p HD (4K preset: 2160p 4K)</td></tr>
+<tr><td class="k">Anamorphic</td><td>How pixel shape is kept. Automatic keeps the picture the right shape with the fewest pixels.</td><td class="set">Automatic</td></tr>
+<tr><td class="k">Optimal size / Allow upscaling</td><td>Use the biggest size allowed; never enlarge a smaller source</td><td class="set">Optimal on, upscaling off</td></tr>
+<tr><td class="k">Borders (Fill)</td><td>Adds black bars</td><td class="set">None</td></tr>
+</table>
+<div class="box y"><b class="h">CHANGING ASPECT RATIO MOVIES</b><br>Some films switch between widescreen and taller IMAX shots (e.g. Nolan and Marvel IMAX editions). Automatic crop would cut the IMAX shots down to the widescreen bars. For those, set Cropping to <b>None</b>. Use <b>Preview</b> to check any movie where the crop numbers look odd (for example more than 140 px off the top on a 1080p source that isn't letterboxed).</div>
+
+<!-- ===================== 9 ===================== -->
+<h2>9. Filters tab</h2>
+<p>Blu-ray and 4K movies are clean, progressive (non-interlaced) video. Every filter except the safety net is off: filters cost speed and usually throw away detail you paid for.</p>
+<table>
+<tr><th>Filter</th><th>What it does</th><th>Cobra setting</th><th>When to change</th></tr>
+<tr><td class="k">Detelecine</td><td>Undoes 3:2 pulldown from TV-style sources</td><td class="set">Off</td><td>DVDs of TV shows with combing on motion: Default.</td></tr>
+<tr><td class="k">Interlace Detection</td><td>Spots interlaced (combed) frames</td><td class="set">Default</td><td>Leave. It only flags combed frames.</td></tr>
+<tr><td class="k">Deinterlace</td><td>Fixes the frames flagged above</td><td class="set">Decomb, Default</td><td>Leave. On a Blu-ray it touches nothing.</td></tr>
+<tr><td class="k">Deblock</td><td>Smooths blocky old sources</td><td class="set">Off</td><td>Very blocky DVDs or old web rips only.</td></tr>
+<tr><td class="k">Denoise</td><td>Removes grain and noise; NLMeans is best, HQDN3D faster</td><td class="set">Off</td><td>Extremely grainy old film that bloats past 3 GB: NLMeans Ultralight, tune Film. It changes the look, so test first.</td></tr>
+<tr><td class="k">Chroma Smooth</td><td>Softens colour edges</td><td class="set">Off</td><td>Rarely needed.</td></tr>
+<tr><td class="k">Sharpen</td><td>Adds edge sharpening</td><td class="set">Off</td><td>Never for movies; it also adds file size.</td></tr>
+<tr><td class="k">Colorspace</td><td>Converts colours (e.g. HDR to SDR)</td><td class="set">Off</td><td>Leave off; it would break HDR.</td></tr>
+<tr><td class="k">Grayscale</td><td>Removes colour</td><td class="set">Off</td><td>&mdash;</td></tr>
+</table>
+
+<!-- ===================== 10 ===================== -->
+
+<h2>10. Video tab</h2>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Video Encoder</td><td>Which codec and which chip does the work (table below)</td><td class="set">H.265 10-bit (x265)</td></tr>
+<tr><td class="k">Framerate (FPS)</td><td>Output frame rate</td><td class="set">Same as source</td></tr>
+<tr><td class="k">Constant / Peak</td><td>Constant keeps an even frame rate; Variable can confuse TVs</td><td class="set">Constant Framerate</td></tr>
+<tr><td class="k">Encoder Preset</td><td>Speed vs. efficiency slider. Slower = smaller file at the same look.</td><td class="set">slow (NVENC: slowest)</td></tr>
+<tr><td class="k">Encoder Tune</td><td>Tweaks for a type of picture</td><td class="set">None</td></tr>
+<tr><td class="k">Fast Decode</td><td>Easier to play on weak devices, bigger file</td><td class="set">Off</td></tr>
+<tr><td class="k">Encoder Profile</td><td>Feature set for players</td><td class="set">Auto (main10 / H.264: high)</td></tr>
+<tr><td class="k">Encoder Level</td><td>Limits for players</td><td class="set">Auto (H.264: 4.1)</td></tr>
+<tr><td class="k">Quality: Constant Quality</td><td>Picks a look (RF number); size follows the movie</td><td class="set">RF 22 (NVENC 24, H.264 21)</td></tr>
+<tr><td class="k">Quality: Avg Bitrate</td><td>Picks a size; look follows the movie</td><td class="set">4K preset only: 3800 kbps</td></tr>
+<tr><td class="k">Multi-Pass / Turbo</td><td>Two passes over the movie so the bitrate is spent where it's needed. Only used with Avg Bitrate.</td><td class="set">4K preset: on / on</td></tr>
+<tr><td class="k">Advanced Options</td><td>Raw encoder settings</td><td class="set">Empty</td></tr>
+</table>
+
+<h3>Which encoder</h3>
+<table>
+<tr><th>Encoder</th><th>Runs on</th><th>Quality per GB</th><th>Speed, 1080p (estimate)</th><th>Use for</th></tr>
+<tr><td class="k">H.265 10-bit (x265)</td><td>CPU</td><td><span class="tag ok">BEST</span></td><td>15&ndash;40 fps: 1&ndash;3 h per movie</td><td>Keepers. Default.</td></tr>
+<tr><td class="k">H.265 10-bit (NVEnc)</td><td>RTX 3070</td><td><span class="tag warn">GOOD</span> (~20&ndash;30% bigger)</td><td>150&ndash;300 fps: 10&ndash;20 min</td><td>Speed, or a big batch</td></tr>
+<tr><td class="k">H.264 (x264)</td><td>CPU</td><td><span class="tag warn">OK</span> (~40% bigger)</td><td>30&ndash;60 fps</td><td>Old players only</td></tr>
+<tr><td class="k">AV1 (SVT / NVEnc)</td><td>&mdash;</td><td>&mdash;</td><td>&mdash;</td><td><span class="tag bad">NOT YET</span> server can't decode it</td></tr>
+</table>
+<div class="small">Speeds depend on the-box's CPU. Do one 2-minute test (Range: Seconds) and read the fps in the status bar to learn your real number. 4K x265 runs at roughly a quarter of the 1080p speed.</div>
+
+<h3>Constant Quality (RF) guide</h3>
+<table>
+<tr><th>RF (x265)</th><th>Look</th><th>2 h 1080p size (estimate)</th></tr>
+<tr><td class="k">18&ndash;20</td><td>Near the disc, even on a big TV</td><td>3&ndash;6 GB</td></tr>
+<tr><td class="k">21&ndash;22</td><td>Excellent; hard to tell from the disc at couch distance <span class="tag ok">COBRA</span></td><td>1.5&ndash;3 GB</td></tr>
+<tr><td class="k">23&ndash;24</td><td>Very good; slight softness in grain and dark scenes</td><td>1&ndash;2 GB</td></tr>
+<tr><td class="k">26+</td><td>Visibly soft; phone viewing only</td><td>under 1 GB</td></tr>
+</table>
+<div class="small">Lower RF = better and bigger. Each step of 1 changes size by roughly 10&ndash;15%. Animation shrinks a lot; grainy film grows. Too big? Raise RF by 1. Looks soft? Lower by 1.</div>
+<h3>Encoder Tune options worth knowing (x265)</h3>
+<table>
+<tr><th>Tune</th><th>Use when</th></tr>
+<tr><td class="k">None</td><td>Most movies (Cobra default)</td></tr>
+<tr><td class="k">Grain</td><td>Heavy film grain you want kept natural. Files get bigger; pair with RF 23.</td></tr>
+<tr><td class="k">Animation</td><td>Cartoons and anime. Smaller files, cleaner lines.</td></tr>
+<tr><td class="k">PSNR / SSIM / Fast Decode</td><td>Never for movies</td></tr>
+</table>
+
+<!-- ===================== 11 ===================== -->
+
+<h2>11. Hitting an exact size (bitrate tables)</h2>
+<p>When a file <b>must</b> fit a size, switch the Video tab to <b>Avg Bitrate (kbps)</b>, tick <b>Multi-Pass Encoding</b> and <b>Turbo first pass</b>, and type the number from the table. The tables assume the two Cobra audio tracks (AAC 160 + AC3 640 = 800 kbps) and leave a small margin, so the result lands just under the target as Windows shows it.</p>
+<table>
+<tr><th>Runtime</th><th>1080p, 2 GB</th><th>1080p, 3 GB</th><th>4K, 4 GB</th><th>4K, 5 GB</th></tr>
+<tr><td class="k">1 h 30 m</td><td>2200</td><td>3800</td><td>5400</td><td>7000</td></tr>
+<tr><td class="k">1 h 45 m</td><td>1800</td><td>3150</td><td>4500</td><td>5900</td></tr>
+<tr><td class="k">2 h 00 m</td><td>1450</td><td>2650</td><td>3850 <span class="tag ok">PRESET</span></td><td>5050</td></tr>
+<tr><td class="k">2 h 15 m</td><td>1200</td><td>2300</td><td>3350</td><td>4400</td></tr>
+<tr><td class="k">2 h 30 m</td><td>1000 <span class="tag warn">SOFT</span></td><td>1950</td><td>2900</td><td>3900</td></tr>
+<tr><td class="k">3 h 00 m</td><td>700 <span class="tag bad">TOO LOW</span></td><td>1500</td><td>2300 <span class="tag bad">TOO LOW</span></td><td>3100</td></tr>
+</table>
+<p>Numbers are video kbps. Formula for any other case:</p>
+<div class="box"><span class="mono">video kbps = (target GB &times; 8,589,935 &divide; runtime in seconds) &minus; audio kbps</span><br><span class="small">Use about 0.1 GB less than the real target for container overhead. 8,589,935 converts Windows "GB" to kilobits.</span></div>
+<table>
+<tr><th>Rule of thumb</th><th>Below this, x265 starts to look soft</th></tr>
+<tr><td class="k">1080p H.265</td><td>about 1200 kbps video</td></tr>
+<tr><td class="k">4K H.265 HDR</td><td>about 3000 kbps video</td></tr>
+</table>
+<div class="box y"><b class="h">LONG 4K MOVIES</b><br>A 3-hour movie at 4 GB leaves too few bits for 4K. Options: allow 5&ndash;6 GB for that one, drop the AC3 track to 448 kbps (adds ~190 kbps back to video), or make it a 1080p HEVC file, which at 4 GB looks better than a starved 4K.</div>
+
+<!-- ===================== 12 ===================== -->
+<h2>12. Audio tab</h2>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Track selection</td><td>Which source tracks HandBrake picks automatically (Selection Behavior button)</td><td class="set">First track matching English</td></tr>
+<tr><td class="k">Track 1 codec</td><td>Encoder for the first output track</td><td class="set">AAC (avcodec), 160 kbps</td></tr>
+<tr><td class="k">Track 1 mixdown</td><td>How 5.1/7.1 is folded to two speakers</td><td class="set">Dolby Pro Logic II (stereo; surround decoders can unfold it)</td></tr>
+<tr><td class="k">Track 2 codec</td><td>Second output track from the same source track</td><td class="set">Auto Passthru, 5.1, 640 kbps</td></tr>
+<tr><td class="k">Allowed passthru</td><td>Formats copied untouched</td><td class="set">AC3 and E-AC3 only</td></tr>
+<tr><td class="k">Fallback</td><td>Used when the source isn't on the allowed list (TrueHD, DTS, DTS-HD)</td><td class="set">AC3 640 kbps 5.1</td></tr>
+<tr><td class="k">Sample rate / Gain / DRC</td><td>Resampling, volume, dynamic range compression</td><td class="set">Auto / 0 / 0</td></tr>
+<tr><td class="k">Track names</td><td>Label shown in the player</td><td class="set">Stereo / Surround 5.1</td></tr>
+</table>
+<table>
+<tr><th>Source audio</th><th>What you get on track 2</th><th>Plays on Roku</th></tr>
+<tr><td class="k">AC3 (Dolby Digital)</td><td>Copied as is</td><td><span class="tag ok">YES</span></td></tr>
+<tr><td class="k">E-AC3 / DD+ Atmos</td><td>Copied as is, Atmos kept</td><td><span class="tag ok">YES</span> (Atmos with an Atmos soundbar)</td></tr>
+<tr><td class="k">TrueHD / TrueHD Atmos</td><td>AC3 5.1 640 kbps (Atmos height lost; MP4 can't hold TrueHD)</td><td><span class="tag ok">YES</span></td></tr>
+<tr><td class="k">DTS / DTS-HD MA / DTS:X</td><td>AC3 5.1 640 kbps</td><td><span class="tag ok">YES</span></td></tr>
+<tr><td class="k">Stereo only (old films)</td><td>Track 2 becomes stereo AC3; delete it to save space</td><td><span class="tag ok">YES</span></td></tr>
+</table>
+<div class="small">Want commentary too? Click <b>Add Track</b>, choose the commentary source, AAC stereo 96&ndash;128 kbps, name it "Commentary".</div>
+
+<!-- ===================== 13 ===================== -->
+
+<h2>13. Subtitles tab and the subtitle playbook</h2>
+<h3>Two kinds of subtitles</h3>
+<table>
+<tr><th>Kind</th><th>Found on</th><th>Inside an MP4?</th></tr>
+<tr><td class="k">Text (SRT, SSA, mov_text)</td><td>Downloads, OCR'd files, some streaming rips</td><td><span class="tag ok">YES</span> switchable on/off</td></tr>
+<tr><td class="k">Picture (PGS on Blu-ray, VobSub on DVD)</td><td><b>Almost every Blu-ray and 4K disc</b></td><td><span class="tag bad">PGS: BURN-IN ONLY</span> VobSub: yes, but players handle it poorly</td></tr>
+</table>
+<p>This is why a subtitle track goes missing: the disc's English subs are PGS, MP4 can't carry PGS as a switchable track, so HandBrake leaves it out unless you burn it in.</p>
+
+<h3>Subtitles tab settings</h3>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Foreign Audio Scan</td><td>Searches the subtitle tracks for lines that appear only during foreign speech. Works on PGS/VobSub only.</td><td class="set">On, burned in</td></tr>
+<tr><td class="k">Track selection</td><td>Which tracks are added automatically</td><td class="set">All English tracks</td></tr>
+<tr><td class="k">Forced Only (per track)</td><td>Keeps only the lines the disc marks as forced</td><td>Tick it on a "forced" track you add by hand</td></tr>
+<tr><td class="k">Burn In (per track)</td><td>Paints the subtitle permanently into the picture. Only one track can be burned.</td><td>Only the forced/foreign track</td></tr>
+<tr><td class="k">Default (per track)</td><td>Shown automatically when playback starts</td><td>Off for full subs</td></tr>
+<tr><td class="k">Burn-in behavior for BD/DVD subs</td><td>Auto-burn picture subtitles</td><td class="set">Off (avoids an always-on full subtitle)</td></tr>
+<tr><td class="k">Import Subtitle</td><td>Adds an outside SRT file as a text track</td><td>Use with the OCR method below</td></tr>
+</table>
+
+<h3>Which method for disc (PGS) subtitles</h3>
+<table>
+<tr><th>Method</th><th>Result</th><th>Direct play?</th><th>Verdict</th></tr>
+<tr><td class="k">A. OCR to SRT (Subtitle Edit), keep as sidecar or import</td><td>Switchable English subs, tiny file</td><td><span class="tag ok">YES</span> everywhere</td><td><span class="tag ok">BEST</span></td></tr>
+<tr><td class="k">B. Burn in</td><td>Subs always on, can't turn off</td><td><span class="tag ok">YES</span></td><td>Only for forced/foreign lines</td></tr>
+<tr><td class="k">C. Save as MKV instead of MP4</td><td>PGS kept as a switchable track</td><td><span class="tag warn">NO</span> when subs are on: server burns them live</td><td>Fallback</td></tr>
+<tr><td class="k">D. Download from Jellyfin</td><td>Open Subtitles plugin fetches an SRT</td><td><span class="tag ok">YES</span></td><td>Quick fix; timing can be off</td></tr>
+</table>
+
+<h3>Method A: turn PGS into SRT with Subtitle Edit (free)</h3>
+<ol>
+<li>On the-box install <b>Subtitle Edit</b> (nikse.dk, free, Windows).</li>
+<li>Open it &rarr; <b>File &rarr; Open</b> &rarr; pick the <b>MakeMKV .mkv</b> (not the HandBrake output). Choose the English PGS track when asked.</li>
+<li>The OCR window opens. Choose <b>Tesseract</b> (or nOCR), language English, click <b>Start OCR</b>.</li>
+<li>When it finishes, click <b>OK</b>, then <b>Tools &rarr; Fix common errors</b> &rarr; <b>Apply selected fixes</b>.</li>
+<li><b>File &rarr; Save as</b>, type <b>SubRip (.srt)</b>, name it after the movie (table below).</li>
+<li>Repeat for the "forced only" track if you'd rather have forced lines switchable than burned.</li>
+</ol>
+<h3>Sidecar file names Jellyfin understands</h3>
+<table>
+<tr><th>File (same folder as the movie)</th><th>Shows up as</th></tr>
+<tr><td class="k">Movie Title (2010).mp4</td><td>The movie</td></tr>
+<tr><td class="k">Movie Title (2010).en.srt</td><td>English</td></tr>
+<tr><td class="k">Movie Title (2010).en.sdh.srt</td><td>English SDH (hearing impaired)</td></tr>
+<tr><td class="k">Movie Title (2010).en.forced.srt</td><td>English Forced (turns on automatically for the foreign parts)</td></tr>
+</table>
+<div class="box"><b class="h">ALREADY ENCODED WITHOUT SUBS?</b><br>No re-encode needed. Make the SRT from the original MKV (Method A, or download one), drop it next to the MP4 with the matching name, then in Jellyfin open the movie &rarr; &hellip; &rarr; <b>Refresh metadata</b>. The track appears in the subtitle menu.</div>
+
+<!-- ===================== 14 / 15 ===================== -->
+
+<h2>14. Chapters and Tags tabs</h2>
+<table>
+<tr><th>Setting</th><th>What it does</th><th>Cobra setting</th></tr>
+<tr><td class="k">Create chapter markers</td><td>Keeps the disc's chapters</td><td class="set">On</td></tr>
+<tr><td class="k">Chapter names</td><td>Editable list; Import/Export as CSV</td><td>Leave (Jellyfin shows "Chapter 1, 2&hellip;")</td></tr>
+<tr><td class="k">Tags / Meta Data tab (if shown)</td><td>Title, year, plot, cover inside the file</td><td>Leave empty; Jellyfin fetches its own</td></tr>
+</table>
+
+<h2>15. 4K and HDR notes</h2>
+<table>
+<tr><th>Topic</th><th>What happens</th><th>What to do</th></tr>
+<tr><td class="k">HDR10</td><td>Kept automatically with H.265 10-bit x265</td><td>Nothing. Never pick an 8-bit encoder for HDR sources.</td></tr>
+<tr><td class="k">Dolby Vision / HDR10+</td><td>HandBrake 1.8 and newer keep it with x265 10-bit (DV profile 7 discs become 8.1)</td><td>Update HandBrake to the latest version on the-box.</td></tr>
+<tr><td class="k">4K HDR source &rarr; 1080p preset</td><td>Stays HDR at 1080p (HandBrake has no tone mapping)</td><td>Fine on the Roku and phones. Non-HDR screens get tone-mapped by Jellyfin's Quick Sync.</td></tr>
+<tr><td class="k">NVENC for 4K</td><td>Works, keeps HDR10, about 30% bigger</td><td>Use only if x265 4K would take too long; switch Avg Bitrate up ~25%.</td></tr>
+<tr><td class="k">Colours look purple/green on one device</td><td>That device mishandles Dolby Vision</td><td>Test in another app. Report it; don't strip DV from the file.</td></tr>
+<tr><td class="k">Two versions of one movie</td><td>Jellyfin can show a version picker</td><td>Same folder: <code>Movie (Year) - 1080p.mp4</code> and <code>Movie (Year) - 4K.mp4</code>.</td></tr>
+</table>
+
+<!-- ===================== 16 ===================== -->
+<h2>16. Into Jellyfin, check direct play, troubleshooting</h2>
+<ol>
+<li>Copy <code>Movie Title (Year).mp4</code> (and any <code>.srt</code>) from the-box into the movies folder on the SGIN, inside a folder of the same name: <code>Movie Title (Year)/</code>.</li>
+<li>Jellyfin &rarr; Dashboard &rarr; Libraries &rarr; Movies &rarr; <b>Scan Library</b>.</li>
+<li>Play it on the device you care about. In the web player: gear icon &rarr; <b>Playback Info</b>. In the app: Dashboard &rarr; <b>Activity</b> while it plays.</li>
+<li>You want <b>Direct Play</b>. Anything else shows a reason; use the table below.</li>
+</ol>
+<table>
+<tr><th>Playback Info says</th><th>Cause</th><th>Fix</th></tr>
+<tr><td class="k">Direct Play</td><td>&mdash;</td><td><span class="tag ok">DONE</span></td></tr>
+<tr><td class="k">Transcode: subtitle codec not supported</td><td>PGS subs selected (MKV) or burned on the fly</td><td>Section 13, Method A</td></tr>
+<tr><td class="k">Transcode: video codec not supported</td><td>Player can't do H.265 10-bit (HD Roku, Firefox)</td><td>Use Chrome/Edge or the app; or the H.264 preset for that movie</td></tr>
+<tr><td class="k">Direct Stream / audio codec not supported</td><td>Player took the AC3 track</td><td>Harmless. Pick the Stereo track to avoid it.</td></tr>
+<tr><td class="k">Container bitrate exceeds limit</td><td>Client or remote quality limit lower than the file</td><td>Client app: Max streaming quality = Auto</td></tr>
+</table>
+<h3>Encode-side troubleshooting</h3>
+<table>
+<tr><th>Problem</th><th>Fix</th></tr>
+<tr><td class="k">File came out much bigger than 3 GB</td><td>Grainy movie. Raise RF by 1&ndash;2, or try Tune: Grain with RF 23, or use the bitrate table.</td></tr>
+<tr><td class="k">Saved as .m4v</td><td>Preferences &rarr; Output Files &rarr; Always use MP4.</td></tr>
+<tr><td class="k">Subtitle track missing</td><td>It was PGS. Section 13.</td></tr>
+<tr><td class="k">Foreign lines missing (aliens, other languages)</td><td>MakeMKV skipped the "forced only" track, or Foreign Audio Scan found nothing. Re-rip with it ticked, or make a <code>.en.forced.srt</code>.</td></tr>
+<tr><td class="k">Only 2 channels on the AC3 track</td><td>Source was stereo, or mixdown changed. Set Track 2 mixdown to 5.1.</td></tr>
+<tr><td class="k">Black bars still there / picture cut off</td><td>Dimensions &rarr; Cropping: try Conservative or Custom; check Preview.</td></tr>
+<tr><td class="k">NVENC encoder not in the list</td><td>Preferences &rarr; Video &rarr; enable NVENC; update the NVIDIA driver.</td></tr>
+<tr><td class="k">Encode fails partway</td><td>Activity Log. Usual causes: output on a network drive that dropped, or the PC went to sleep.</td></tr>
+</table>
+<div class="small" style="margin-top:14pt;border-top:1px solid #2f4a33;padding-top:5pt">Source: cobra-server <code>docs/handbrake/</code>. Presets: <code>cobra-handbrake-presets.json</code> (Cobra 1080p HEVC, Cobra 4K HDR, Cobra 1080p NVENC Fast, Cobra 1080p H.264 Compatibility). Related: Jellyfin stutter fixes (project files <code>jellyfin/stutter-fixes.md</code>), Roku TV setup (<code>docs/roku-tv/README.md</code>).</div>
+</body>
+</html>
