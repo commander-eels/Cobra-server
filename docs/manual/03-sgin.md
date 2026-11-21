@@ -67,7 +67,7 @@ The network adapter has to sit on the hub because the USB-A ports would cap it a
 | Installation complete | pull the USB stick → Continue |
 
 - [ ] After reboot, log in on the SGIN's screen as `eels` and note its MAC: `ip -br link` (the `enx…` line). It's the USB adapter's MAC: replace the adapter and the `.20` mapping below has to be edited to the new MAC
-- [ ] OPNsense → **Firewall → NAT → Port Forward**: delete each rule pointing at `10.6.9.200` (part 2.4) → **Apply**. The old sites stay offline until part 5's gate takes over 443
+- [ ] OPNsense → **Firewall → NAT → Destination NAT**: delete each rule pointing at `10.6.9.200` (part 2.4) → **Apply**. The old sites stay offline until part 5's gate takes over 443
 - [ ] OPNsense DHCP page from part 2.6 (**Services → ISC DHCPv4 → LAN** or **Services → Dnsmasq DNS & DHCP**) → static mappings / hosts: if a row has the SGIN's MAC (at `.200` or `.20`), edit it to IP `10.6.9.20`, hostname `cobra-stream`; otherwise **+** add one. Save → **Apply**
 - [ ] On the SGIN: `sudo systemctl restart networking` (or `sudo reboot`)
 - [ ] Check on the SGIN's screen: `ip -4 -br a` shows `10.6.9.20/24`
