@@ -98,12 +98,19 @@ Description `home Wi-Fi`. **Save** after each; **Apply** once at the end.
 | `scores` | hiscore board |
 | `radio` | radio |
 | `ha` | Home Assistant |
+| `audio` | v3 Bay |
+| `talk` | v3 Bay |
+| `player` | v3 Bay |
+| `ebooks` | v3 Bay |
+| `account` | Multi-Pass (password page) |
+| `art` | Bay pictures and cover walls |
+| `auth` | redirect to the gate sign-in |
 
 Leave these **out**:
 
 - `songofeo.com` itself, `www`: Porkbun hosts them, and Pi-hole forwards them to Unbound. An override would break them for the LAN too.
 - `vpn`: Pi-hole forwards it to Unbound too.
-- `vault`, `status`: LAN and WireGuard only, on purpose.
+- `vault`, `status`, `archives`: LAN and WireGuard only, on purpose (v3 closes `archives` at the gate).
 - Never a `*` wildcard, for the same reason as `www`.
 
 A name added to Porkbun later (a new Bay) needs a host override here too, or it won't open on the home Wi-Fi.
@@ -199,7 +206,16 @@ Pick the one that matches where the Roku is plugged in.
 ### 7b. Roku stays on the Xfinity router or Wi-Fi
 
 A Roku can't set its own DNS, so it can't use the names. It goes straight to Jellyfin through one
-forward open only to `10.0.0.0/24`: follow [roku-tv/README.md](../roku-tv/README.md) steps 1, 2, 3, 5, 6
+forward open only to `10.0.0.0/24`.
+
+**First, the SGIN's own firewall.** The forward keeps the TV's `10.0.0.x` source, and the SGIN's
+`/etc/nftables.conf` only accepts 8096 from `10.6.9.0/24` and `10.6.99.0/24` (manual 3.x, the
+`ip saddr { 10.6.9.0/24, 10.6.99.0/24 } ... accept` line), so it would drop the TV. Add one narrow rule,
+`ip saddr 10.0.0.0/24 tcp dport 8096 accept`, with `F37-sgin-firewall-roku-tv.sh` from the
+cobra-fix-v3.1 zip (it checks with `nft -c`, backs up, and rolls back by itself after 2 minutes if SSH drops).
+7a doesn't need this: through the gate the SGIN sees the gate's `10.6.9.10`.
+
+Then follow [roku-tv/README.md](../roku-tv/README.md) steps 1, 2, 3, 5, 6
 (step 1 is already done by step 2 here).
 
 Test from the **phone on Electronomicon**, not from the-box (the-box is on the LAN side, where
@@ -220,6 +236,8 @@ Optional, so Jellyfin doesn't cap the TV's bitrate as "remote": Jellyfin Dashboa
 |---|---|
 | Phone: "site can't be reached" for every station name | Step 2 (Block private networks still ticked), step 5 rule, phone DNS 1 = `10.0.0.2`, Private DNS off. |
 | Phone: one name fails, others work | That name has no host override (step 4). |
+| Roku: can't connect to `10.0.0.2:8096`, phone test also times out | The SGIN's nftables rule from 7b is missing. |
+| Sign-in asks for a 2FA code at home | Authelia's `homewifi` network (`10.0.0.0/24`) has two-factor rules. Stricter than needed, not broken. |
 | Phone: certificate warning | You typed `https://10.0.0.2`. Use the name. |
 | Phone: works on data, not at home, WireGuard on | Turn WireGuard off at home; the tunnel's DNS is Pi-hole, which answers `10.6.9.10`, and the cellular tunnel only carries `10.6.9.0/24`. Either state works, but don't mix. |
 | the-box or other LAN devices broke | Step 4's second check. Disable the overrides and tell Claude. |
