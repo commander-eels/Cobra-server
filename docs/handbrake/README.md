@@ -15,7 +15,7 @@ The x265 and x264 presets were test-encoded with HandBrakeCLI 1.7.2 (output: HEV
 H.264 High, AAC stereo + AC3 5.1 passthru, mov_text subs, moov atom first). The NVENC preset
 is schema-checked only (no NVIDIA GPU on the test machine).
 
-PDF copy: project files `handbrake/cobra-handbrake-guide.pdf`.
+PDF copy: project files `handbrake/cobra-handbrake-guide-v2.pdf` (v1 kept as `cobra-handbrake-guide.pdf`). v2 adds section 17, other apps.
 
 Rebuild the PDF (Chromium print, flat colours only, no glow/grain):
 

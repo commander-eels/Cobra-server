@@ -44,7 +44,7 @@
 <div class="mono" style="color:#ff4b5a;font-size:8.5pt;letter-spacing:2px">COBRA CORPORATE · REFERENCE CR-HB · INTERNAL</div>
 <h1>Movie Encoding Field Guide</h1>
 <div class="cover-sub">MakeMKV rip &rarr; HandBrake &rarr; web-optimized MP4 &rarr; Jellyfin direct play. Turning 5&ndash;10 GB MKVs into 2&ndash;4 GB MP4s that still look and sound great.</div>
-<div class="meta">ENCODER: the-box (Win11, RTX 3070) · SERVER: SGIN 10.6.9.20, Jellyfin, Intel N5095A Quick Sync · CLIENTS: Roku TV, phones, browsers, friends over the internet · 2026-11-21</div>
+<div class="meta">ENCODER: the-box (Win11, RTX 3070) · SERVER: SGIN 10.6.9.20, Jellyfin, Intel N5095A Quick Sync · CLIENTS: Roku TV, phones, browsers, friends over the internet · v2 2026-11-21</div>
 
 <h2>Quick card: which preset?</h2>
 <table>
@@ -77,6 +77,7 @@
 <tr><td>6. Your encode, step by step</td><td>14. Chapters and Tags tabs</td></tr>
 <tr><td>7. Summary tab</td><td>15. 4K and HDR notes</td></tr>
 <tr><td>8. Dimensions tab</td><td>16. Into Jellyfin, check direct play, troubleshooting</td></tr>
+<tr><td></td><td>17. Other apps worth having</td></tr>
 </table>
 
 <!-- ===================== 1 ===================== -->
@@ -419,6 +420,63 @@
 <tr><td class="k">NVENC encoder not in the list</td><td>Preferences &rarr; Video &rarr; enable NVENC; update the NVIDIA driver.</td></tr>
 <tr><td class="k">Encode fails partway</td><td>Activity Log. Usual causes: output on a network drive that dropped, or the PC went to sleep.</td></tr>
 </table>
+
+<!-- ===================== 17 ===================== -->
+<h2>17. Other apps worth having</h2>
+<p>All free unless marked. "Where" says which machine it belongs on. Nothing here is required; the Cobra presets plus Subtitle Edit cover the normal workflow.</p>
+
+<h3>Converting and encoding</h3>
+<table>
+<tr><th>App</th><th>Where</th><th>What it's good for</th><th>Verdict</th></tr>
+<tr><td class="k">HandBrake</td><td>the-box</td><td>Everyday conversions with presets (this guide)</td><td><span class="tag ok">MAIN TOOL</span></td></tr>
+<tr><td class="k">MakeMKV</td><td>the-box</td><td>Disc to MKV with no quality loss. Free while in beta (monthly key from its forum).</td><td><span class="tag ok">KEEP</span></td></tr>
+<tr><td class="k">StaxRip</td><td>the-box</td><td>Power-user encoder for Windows: NVENC, x265, Dolby Vision and HDR10+ handling, batch jobs. More knobs than HandBrake.</td><td><span class="tag warn">LATER</span> for tricky 4K discs</td></tr>
+<tr><td class="k">Shutter Encoder</td><td>the-box</td><td>Simple drag-and-drop converter for odd one-off jobs (audio extract, GIFs, quick resize)</td><td><span class="tag ok">NICE</span></td></tr>
+<tr><td class="k">FFmpeg</td><td>both</td><td>The command-line engine under almost every tool here. Useful for one-line fixes.</td><td>Reference</td></tr>
+<tr><td class="k">Tdarr</td><td>SGIN server + the-box as GPU worker</td><td>Automatically converts a whole library to your rules (e.g. "anything not H.265 becomes H.265"), using the-box's RTX 3070 as a worker node.</td><td><span class="tag warn">CAREFUL</span> see note</td></tr>
+<tr><td class="k">FileFlows</td><td>SGIN + the-box</td><td>Same idea as Tdarr with a flowchart editor; some features paid</td><td>Alternative to Tdarr</td></tr>
+</table>
+<div class="box r"><b class="h">TDARR / FILEFLOWS REPLACE FILES</b><br>By default they overwrite the original after converting. If you try one, point it at a test folder first and set it to write output to a separate folder, so nothing in the real library is replaced until you've checked results.</div>
+
+<h3>Editing without re-encoding</h3>
+<table>
+<tr><th>App</th><th>Where</th><th>What it's good for</th></tr>
+<tr><td class="k">MKVToolNix</td><td>the-box</td><td>Add, remove or rename tracks in an MKV, set the default audio/subtitle, join files. Seconds, no quality loss.</td></tr>
+<tr><td class="k">LosslessCut</td><td>the-box</td><td>Trim the start/end or cut out a part of an MP4 or MKV without re-encoding</td></tr>
+<tr><td class="k">DaVinci Resolve (free version)</td><td>the-box</td><td>Real video editing: pre-rolls, filler, fan edits, colour. Uses the RTX 3070.</td></tr>
+<tr><td class="k">Shotcut / Kdenlive</td><td>the-box</td><td>Lighter, simpler editors for quick projects (filler clips for ErsatzTV)</td></tr>
+</table>
+
+<h3>Subtitles</h3>
+<table>
+<tr><th>App</th><th>Where</th><th>What it's good for</th></tr>
+<tr><td class="k">Subtitle Edit</td><td>the-box</td><td>Turn disc (PGS) subtitles into SRT, fix timing, fix OCR mistakes (section 13)</td></tr>
+<tr><td class="k">Bazarr</td><td>SGIN (container)</td><td>Watches the library and downloads missing subtitles automatically, with sync fixing</td></tr>
+<tr><td class="k">Jellyfin Open Subtitles plugin</td><td>SGIN (Jellyfin)</td><td>Search and download a subtitle from inside a movie's menu</td></tr>
+</table>
+
+<h3>Checking files</h3>
+<table>
+<tr><th>App</th><th>Where</th><th>What it's good for</th></tr>
+<tr><td class="k">MediaInfo</td><td>the-box</td><td>Right-click any file: codec, bit depth, HDR, audio format, subtitle type. The fastest way to see why something transcodes.</td></tr>
+<tr><td class="k">MPC-HC or mpv</td><td>the-box</td><td>Accurate playback for checking an encode, including HDR and all tracks</td></tr>
+<tr><td class="k">VLC</td><td>the-box, phones</td><td>Plays anything; fine for a quick look (less accurate on HDR)</td></tr>
+</table>
+
+<h3>Running and managing the Jellyfin collection</h3>
+<table>
+<tr><th>App</th><th>Where</th><th>What it's good for</th></tr>
+<tr><td class="k">tinyMediaManager (free version)</td><td>the-box</td><td>Renames folders and files to <code>Title (Year)</code>, fetches artwork and info, fixes mismatches before Jellyfin sees them</td></tr>
+<tr><td class="k">Jellyseerr</td><td>SGIN (container), behind the gate</td><td>Friends request movies from a nice page; you see the list</td></tr>
+<tr><td class="k">Jellystat</td><td>SGIN (container)</td><td>Who watched what, when, and how (direct play vs transcode) over time</td></tr>
+<tr><td class="k">Plugin: Intro Skipper</td><td>Jellyfin</td><td>"Skip Intro" button on TV episodes</td></tr>
+<tr><td class="k">Plugin: Playback Reporting</td><td>Jellyfin</td><td>Built-in watch statistics in the dashboard</td></tr>
+<tr><td class="k">Plugin: TMDb Box Sets</td><td>Jellyfin</td><td>Groups movies into collections automatically (all the Alien films, etc.)</td></tr>
+<tr><td class="k">Jellyfin Media Player</td><td>the-box, the-spire</td><td>Desktop app that plays almost everything directly, unlike Firefox</td></tr>
+<tr><td class="k">Findroid / Swiftfin</td><td>Android / iPhone</td><td>Alternative Jellyfin phone apps with wider direct play</td></tr>
+</table>
+<div class="small">Container apps on the SGIN follow the usual pod pattern (scripts/podman/sgin, behind the gate with Authelia). Ask for one when you want it and it can be added to <code>docs/CHECKLIST.md</code>.</div>
+
 <div class="small" style="margin-top:14pt;border-top:1px solid #2f4a33;padding-top:5pt">Source: cobra-server <code>docs/handbrake/</code>. Presets: <code>cobra-handbrake-presets.json</code> (Cobra 1080p HEVC, Cobra 4K HDR, Cobra 1080p NVENC Fast, Cobra 1080p H.264 Compatibility). Related: Jellyfin stutter fixes (project files <code>jellyfin/stutter-fixes.md</code>), Roku TV setup (<code>docs/roku-tv/README.md</code>).</div>
 </body>
 </html>
