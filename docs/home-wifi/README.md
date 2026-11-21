@@ -152,17 +152,17 @@ Resolve-DnsName www.songofeo.com -DnsOnly
 
 - [ ] **Firewall → Rules**, WAN selected → **+**:
 
-| Field | Set to |
+| Field | How to set it |
 |---|---|
-| Action | Pass |
-| Interface | WAN |
-| Direction | in |
-| TCP/IP Version | IPv4 |
-| Protocol | TCP/UDP |
-| Source | Single host or Network, `10.0.0.0/24` |
-| Destination | This Firewall |
-| Destination port range | DNS to DNS |
-| Description | `Xfinity side DNS` |
+| Action | Dropdown: pick **Pass** |
+| Interface | Dropdown: pick **WAN** |
+| Direction | Dropdown: pick **in** |
+| TCP/IP Version | Dropdown: pick **IPv4** |
+| Protocol | Dropdown: pick **TCP/UDP** |
+| Source | Dropdown: pick **Single host or Network**, then type `10.0.0.0/24` in the box next to it (on some pages you just type `10.0.0.0/24` in the Source box) |
+| Destination | Dropdown: pick **This Firewall** |
+| Destination port range | **One box:** type `53` (or pick **DNS** from the list; DNS means port 53). **Two dropdowns ("from" and "to"):** pick **DNS** in both, or pick **(other)** and type `53` in both. This opens only port 53, the port phones use to look up names |
+| Description | Type `Xfinity side DNS` |
 
 **Save**, then **Apply changes**.
 
@@ -178,13 +178,13 @@ On the phone:
       A named provider (dns.google, Cloudflare) would skip `10.0.0.2`.
 - [ ] Settings → Connections → Wi-Fi → the gear by **Electronomicon** → **View more** → **IP settings**: **Static**.
 
-| Field | Set to |
+| Field | How to set it |
 |---|---|
-| IP address | `10.0.0.251` |
-| Gateway | `10.0.0.1` |
-| Network prefix length | `24` |
-| DNS 1 | `10.0.0.2` |
-| DNS 2 | empty (delete whatever is there) |
+| IP address | Type `10.0.0.251` |
+| Gateway | Type `10.0.0.1` |
+| Network prefix length | Type `24` |
+| DNS 1 | Type `10.0.0.2` |
+| DNS 2 | Delete whatever is there and leave it empty |
 
 **Save**. Turn Wi-Fi off and on once.
 

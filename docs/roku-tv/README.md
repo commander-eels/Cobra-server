@@ -27,17 +27,17 @@ If you skip this, OPNsense drops everything coming from `10.0.0.x`.
 
 Firewall > NAT > Destination NAT, then **+**.
 
-| Field | Set to |
+| Field | How to set it |
 |---|---|
-| Interface | WAN |
-| Protocol | TCP |
-| Source | `10.0.0.0/24` |
-| Destination | WAN address |
-| Destination port | `8096` |
-| Redirect target IP | `10.6.9.20` |
-| Redirect target port | `8096` |
-| Firewall rule (26.1+, replaces "Filter rule association") | **Register rule** (the default, Manual, makes no pass rule and the TV stays blocked) |
-| Description | `Roku to Jellyfin` |
+| Interface | Dropdown: pick **WAN** |
+| Protocol | Dropdown: pick **TCP** |
+| Source | Type `10.0.0.0/24` (if Source is hidden, click **Advanced** first; if it's a dropdown, pick **Single host or Network** and type `10.0.0.0/24` next to it) |
+| Destination | Dropdown: pick **WAN address** |
+| Destination port | **One box:** type `8096`. **Two dropdowns ("from" and "to"):** pick **(other)** in both and type `8096` in both |
+| Redirect target IP | Type `10.6.9.20` (if it's a dropdown, pick **Single host or Network** first) |
+| Redirect target port | Type `8096` (or pick **(other)** and type `8096`) |
+| Firewall rule (26.1+, replaces "Filter rule association") | Dropdown: pick **Register rule**. The default, Manual, makes no pass rule, and the TV stays blocked |
+| Description | Type `Roku to Jellyfin` |
 
 **Save**, then **Apply**.
 
