@@ -30,7 +30,6 @@ DISKS=${COBRA_DISKS:-/srv/storage/disks}
   BOOKS_DIR=dock1a/books    # the Library's bookstore sections, one folder each: kavita.sh books (its own Kavita)
   RPG_DIR="dock1a/books/RPG Books"  # the RPG Vault: kavita.sh rpg (its own Kavita; never shown in Books)
   COMICS_DIR=dock1a/comics
-  RPG_DIR="dock1a/books/RPG Books"  # the RPG Vault: Kavita library "RPG Vault", the PDFs already on dock1a (Kavita mounts the disks read-only) (since 2026-11-18; was a Calibre-Web shelf)
   SCANS_DIR=dock1a/scans
   BACKUPS_DIR=dock1a/backups
   ART_DIR=dock1a/art

@@ -6,7 +6,7 @@ here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # navidrome-talk and navidrome-archives are retired (2026-11-18): Talk Radio & Comedy and The Archives are
 # Audiobookshelf libraries now. Their scripts and data stay, so ./navidrome-talk.sh brings one back if wanted.
 # Do not stop those two containers until 90-verify-gate.sh reports the Audiobookshelf library walls are clean.
-for s in jellyfin ersatztv navidrome audiobookshelf kavita romm; do
+for s in jellyfin ersatztv navidrome audiobookshelf; do
   bash "$here/$s.sh"
   echo
 done
@@ -20,10 +20,10 @@ for k in comics rpg books; do
     # Started here it would come up empty, and the one-time copy from comics only works into an empty instance.
     echo "==> skipping Kavita rpg (not set up yet: run COPY_FROM_COMICS=1 ./kavita.sh rpg once by hand)"; echo; continue
   fi
-  "$here/kavita.sh" "$k" || echo "==> Kavita $k didn't start (reason above); the other apps carry on"
+  bash "$here/kavita.sh" "$k" || echo "==> Kavita $k didn't start (reason above); the other apps carry on"
   echo
 done
-"$here/romm.sh"
+bash "$here/romm.sh"
 echo
 liq=${COBRA_DATA:-/srv/stream}/radio/radio.liq
 if [ -r "$liq" ]; then bash "$here/radio.sh"; else echo "==> skipping the radio (no $liq yet, part 8)"; fi
