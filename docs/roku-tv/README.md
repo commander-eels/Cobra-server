@@ -1,7 +1,7 @@
 # Roku TV: watch Jellyfin from the Xfinity side
 
 The TV stays plugged into the Xfinity router (or on Xfinity Wi-Fi). It reaches Jellyfin through
-one port forward on OPNsense, open only to the home Xfinity network. Nothing is opened to the internet.
+one Destination NAT rule on OPNsense, open only to the home Xfinity network. Nothing is opened to the internet.
 
 | Item | Value |
 |---|---|
@@ -19,9 +19,9 @@ Interfaces > WAN: untick **Block private networks**, then **Save** and **Apply**
 
 If you skip this, OPNsense drops everything coming from `10.0.0.x`.
 
-## 2. Add the port forward
+## 2. Add the Destination NAT rule
 
-Firewall > NAT > Port Forward, then **+**.
+Firewall > NAT > Destination NAT, then **+**.
 
 | Field | Set to |
 |---|---|

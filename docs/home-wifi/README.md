@@ -14,7 +14,7 @@ the phone moves to the cobra Wi-Fi and the "Undo" list at the bottom closes this
 |---|---|
 | Problem | On the Xfinity side, `tv.songofeo.com` resolves to the public IP, and the Xfinity router can't loop traffic for its own public IP back inside (no NAT loopback). |
 | DNS fix | OPNsense's Unbound answers the station's names with `10.0.0.2` (OPNsense's Xfinity-side address), but only for devices that ask it. The phone is told to ask it. |
-| Traffic | Phone → `10.0.0.2:443` → the existing port forward → gate `10.6.9.10:443` → Authelia → the app. |
+| Traffic | Phone → `10.0.0.2:443` → the existing Destination NAT rule → gate `10.6.9.10:443` → Authelia → the app. |
 | Who can ask Unbound on WAN | Only `10.0.0.0/24`. The internet can't (WAN rule + Unbound access list). |
 | LAN | Unchanged. Pi-hole still answers `10.6.9.10` for LAN and WireGuard devices; it never asks Unbound about app names. |
 | Work laptop | Untouched. Nothing on the Xfinity router changes; it keeps Xfinity's DNS. |
@@ -35,7 +35,7 @@ Step 6 is the phone. Step 7 is the TV, two ways.
 Write down what you see; change nothing yet.
 
 - [ ] **Interfaces → [WAN]**: is **Block private networks** ticked? Is **Block bogon networks** ticked?
-- [ ] **Firewall → NAT → Port Forward**: the 443 → `10.6.9.10` rule. **Destination** should be **WAN address**
+- [ ] **Firewall → NAT → Destination NAT**: the 443 → `10.6.9.10` rule. **Destination** should be **WAN address**
       (covers both the public IP and `10.0.0.2`). **Source** should be **any**.
 - [ ] **Firewall → Rules → WAN**: "Allow 443 to gate" has **Source any**. Note any rule with port 53 already there.
 - [ ] **Services → Unbound DNS → General → Network Interfaces**: *All*, or a list (which ones?).
@@ -201,7 +201,7 @@ Pick the one that matches where the Roku is plugged in.
 - [ ] Plug it in. It gets a `10.6.9.x` address and Pi-hole DNS from OPNsense, like the-box.
 - [ ] Jellyfin app on the Roku → **Add Server** → `https://tv.songofeo.com` → your Jellyfin login.
 - [ ] Nothing to change in OPNsense. If the 8096 forward from 7b was added earlier, **disable** it
-      (Firewall → NAT → Port Forward, untick Enabled; don't delete) and Apply.
+      (Firewall → NAT → Destination NAT, untick Enabled; don't delete) and Apply.
 
 ### 7b. Roku stays on the Xfinity router or Wi-Fi
 
