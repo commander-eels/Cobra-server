@@ -14,7 +14,7 @@ the phone moves to the cobra Wi-Fi and the "Undo" list at the bottom closes this
 |---|---|
 | Problem | On the Xfinity side, `tv.songofeo.com` resolves to the public IP, and the Xfinity router can't loop traffic for its own public IP back inside (no NAT loopback). |
 | DNS fix | OPNsense's Unbound answers the station's names with `10.0.0.2` (OPNsense's Xfinity-side address), but only for devices that ask it. The phone is told to ask it. |
-| Traffic | Phone → `10.0.0.2:443` → the existing port forward → gate `10.6.9.10:443` → Authelia → the app. |
+| Traffic | Phone → `10.0.0.2:443` → the existing Destination NAT rule → gate `10.6.9.10:443` → Authelia → the app. |
 | Who can ask Unbound on WAN | Only `10.0.0.0/24`. The internet can't (WAN rule + Unbound access list). |
 | LAN | Unchanged. Pi-hole still answers `10.6.9.10` for LAN and WireGuard devices; it never asks Unbound about app names. |
 | Work laptop | Untouched. Nothing on the Xfinity router changes; it keeps Xfinity's DNS. |
