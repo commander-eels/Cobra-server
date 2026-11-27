@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CR-ARC RomM Arcade Field Guide</title>
+<style>
+  @page { size: Letter; margin: 0.55in 0.6in; background: #0e100e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0e100e; color: #d9e2d9; font: 10pt/1.42 Inter, "DejaVu Sans", sans-serif; }
+  h1, h2, h3, code, th, .tab, .num { font-family: "DejaVu Sans Mono", monospace; }
+  h1 { color: #39ff6a; font-size: 21pt; margin: 0 0 3pt; letter-spacing: 1px; }
+  h2 { color: #39ff6a; font-size: 13pt; margin: 16pt 0 6pt; padding: 3pt 0 3pt 8pt; border-left: 4pt solid #39ff6a; break-after: avoid; }
+  h3 { color: #ffd23f; font-size: 10.5pt; margin: 10pt 0 4pt; break-after: avoid; }
+  p { margin: 3pt 0 5pt; }
+  code { color: #ffd23f; font-size: 9pt; }
+  b { color: #fff; }
+  a { color: #7fd8ff; text-decoration: none; }
+  .head { color: #ff4b5a; font: 8.5pt "DejaVu Sans Mono", monospace; letter-spacing: 2px; }
+  .intro { color: #9fb39f; font-size: 9.5pt; border-top: 1px solid #2f4a33; border-bottom: 1px solid #2f4a33; padding: 4pt 0; margin: 6pt 0 8pt; }
+  .step { border: 1px solid #2a352b; background: #121612; padding: 6pt 9pt 6pt 9pt; margin: 5pt 0; break-inside: avoid; }
+  .step .top { display: flex; gap: 6pt; align-items: baseline; }
+  .box { display: inline-block; width: 10pt; height: 10pt; border: 1.5px solid #39ff6a; flex: none; transform: translateY(1pt); }
+  .num { color: #39ff6a; font-weight: bold; font-size: 10pt; flex: none; }
+  .tab { display: inline-block; font-size: 7.5pt; font-weight: bold; padding: 0.5pt 5pt; border: 1px solid #7fd8ff; color: #7fd8ff; flex: none; }
+  .tab.b { border-color: #ffd23f; color: #ffd23f; }
+  .tab.w { border-color: #c7a0ff; color: #c7a0ff; }
+  pre { margin: 5pt 0 4pt 0; padding: 5pt 8pt; background: #050705; border: 1px solid #2f4a33; color: #e8ffe8; font: 9pt/1.35 "DejaVu Sans Mono", monospace; white-space: pre-wrap; word-break: break-all; }
+  .see { color: #9fe0a8; font-size: 9pt; margin-top: 3pt; }
+  .see::before { content: "You should see: "; color: #39ff6a; font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 8pt; font-size: 8.8pt; }
+  tr { break-inside: avoid; }
+  th { background: #1b2a1d; color: #39ff6a; text-align: left; font-size: 8.3pt; padding: 3pt 5pt; border: 1px solid #2f4a33; }
+  td { padding: 3pt 5pt; border: 1px solid #2a352b; vertical-align: top; }
+  td.k { color: #fff; font-weight: 600; white-space: nowrap; }
+  .page { break-before: page; }
+  .help p { margin: 2pt 0 6pt; }
+  .help .n { color: #39ff6a; font: bold 9pt "DejaVu Sans Mono", monospace; }
+  .small { font-size: 8.5pt; color: #9fb39f; }
+</style>
+</head>
+<body>
+
+<div class="head">COBRA CORPORATE · REFERENCE CR-ARC · THE ARCADE</div>
+<h1>RomM Arcade Field Guide</h1>
+<div class="intro">Tick each box as you go. Help for every step is at the end, by step number. Tabs: <b>eels@cobra-stream</b> (PowerShell tab, SSH to the SGIN) and <b>Browser</b> (your browser on the-box). Everything is done on the-box.</div>
+
+<h2>Part 1. Check where RomM is running</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">1.1</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/podman pod ps</pre>
+<div class="see">a line with the name <code>arcade</code> (and one with <code>stream</code>). No <code>arcade</code> line? Stop and read Help 1.1.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">1.2</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/ls /home/podsvc/.config/containers/systemd</pre>
+<div class="see"><code>arcade.pod</code>, <code>romm.container</code> and <code>romm-db.container</code> in the list.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">1.3</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/podman ps --filter name=romm</pre>
+<div class="see">two lines, <code>romm-db</code> and <code>romm</code>, both with <code>Up</code> in the STATUS column.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">1.4</span><span class="tab b">Browser</span><span>Open <code>https://arcade.songofeo.com</code>. Sign in at the gate if it asks.</span></div>
+<div class="see">either the RomM <b>Setup</b> wizard ("Step 1 of 3"): skip to Part 3. Or a RomM sign-in page: go on to Part 2.</div></div>
+
+<h2>Part 2. Fresh start, so the setup wizard shows</h2>
+<p class="small">This moves the old RomM data (accounts, scan results, saves) to a folder named <code>romm.pre-reset-2026-11-27</code>. Nothing is deleted. Your ROM files are not touched.</p>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.1</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/systemctl --user stop romm romm-db</pre>
+<div class="see">the prompt <code>eels@cobra-stream:~$</code> again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.2</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/mv /srv/stream/romm /srv/stream/romm.pre-reset-2026-11-27</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.3</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/mkdir -p /srv/stream/romm/resources /srv/stream/romm/assets /srv/stream/romm/config /srv/stream/romm/redis /srv/stream/romm/db</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.4</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/cp -p /srv/stream/romm.pre-reset-2026-11-27/config/config.yml /srv/stream/romm/config/</pre>
+<div class="see">the prompt again. <code>No such file or directory</code> is fine too (Help 2.4).</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.5</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/systemctl --user start romm-db</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.6</span><span class="tab">eels@cobra-stream</span><span>Wait one minute, then type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/podman logs --tail 5 romm-db</pre>
+<div class="see"><code>ready for connections</code> on one of the lines. Not yet? Wait 30 seconds and type it again.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.7</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/systemctl --user start romm</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.8</span><span class="tab">eels@cobra-stream</span><span>Wait one minute, then type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/podman logs --tail 20 romm</pre>
+<div class="see">startup lines, and none that say <code>Address in use</code> or <code>Can't connect to</code>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">2.9</span><span class="tab b">Browser</span><span>Reload <code>https://arcade.songofeo.com</code>.</span></div>
+<div class="see">the RomM <b>Setup</b> wizard, "Step 1 of 3".</div></div>
+
+<h2>Part 3. The setup wizard</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">3.1</span><span class="tab b">Browser</span><span>On <b>Setup library structure</b>, untick every platform marked <b>Will create</b>, then click <b>Next</b>.</span></div>
+<div class="see"><b>Library structure detected</b> at the top, and your platform folders listed as <b>Detected · N games</b>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">3.2</span><span class="tab w">windows</span><span>Vaultwarden: make a new login named <code>RomM admin</code> with a new strong password. Keep it open.</span></div>
+<div class="see">the new item saved in Vaultwarden.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">3.3</span><span class="tab b">Browser</span><span>On <b>Create an admin user</b>: <b>Username</b>: type <code>eels</code>. <b>Email</b>: type your email. <b>Password</b>: paste the one from Vaultwarden. Click <b>Next</b>.</span></div>
+<div class="see"><b>Check metadata sources</b> (Step 3 of 3).</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">3.4</span><span class="tab b">Browser</span><span>Click <b>Finish</b>. The keys come in Part 5.</span></div>
+<div class="see">the RomM sign-in page.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">3.5</span><span class="tab b">Browser</span><span>Sign in as <code>eels</code>.</span></div>
+<div class="see">the RomM home page with your platforms (no covers yet).</div></div>
+
+<h2>Part 4. Get the cover art and game info keys</h2>
+<p class="small">Save each key in Vaultwarden as you get it. All of these are free.</p>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.1</span><span class="tab b">Browser</span><span>Open <code>https://dev.twitch.tv/console/apps/create</code> and sign in to Twitch.</span></div>
+<div class="see"><b>Register Your Application</b>. (Twitch wants two-step login on the account first: Help 4.1.)</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.2</span><span class="tab b">Browser</span><span><b>Name</b>: type <code>romm-</code> and then 12 random letters and digits. <b>OAuth Redirect URLs</b>: type <code>http://localhost</code>. <b>Category</b>: pick <b>Application Integration</b>. <b>Client Type</b>: pick <b>Confidential</b>. Click <b>Create</b>.</span></div>
+<div class="see">your app in the list.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.3</span><span class="tab b">Browser</span><span>Click <b>Manage</b> on that app. Copy the <b>Client ID</b>. Click <b>New Secret</b> and copy the secret. Save both in Vaultwarden as <code>RomM IGDB</code>.</span></div>
+<div class="see">two long codes saved.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.4</span><span class="tab b">Browser</span><span>Open <code>https://www.screenscraper.fr/membreinscription.php</code>, make an account, and save its username and password in Vaultwarden as <code>RomM ScreenScraper</code>.</span></div>
+<div class="see">you can sign in to screenscraper.fr.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.5</span><span class="tab b">Browser</span><span>Open <code>https://www.steamgriddb.com</code>, sign in with Steam, then open <code>https://www.steamgriddb.com/profile/preferences/api</code>. Copy the key and save it as <code>RomM SteamGridDB</code>.</span></div>
+<div class="see">one key saved.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">4.6</span><span class="tab b">Browser</span><span>Optional, for achievements: open <code>https://retroachievements.org/settings</code>, copy the <b>Web API Key</b>, and save it as <code>RomM RetroAchievements</code>.</span></div>
+<div class="see">one key saved (or skip it).</div></div>
+
+<h2>Part 5. Give RomM the keys and a BIOS folder</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.1</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/mkdir -p /home/podsvc/.config/cobra</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.2</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/nano /home/podsvc/.config/cobra/romm.env</pre>
+<div class="see">the nano editor, empty. (Not empty? Help 5.2.)</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.3</span><span class="tab">eels@cobra-stream</span><span>Type these lines, putting your keys after the <code>=</code> signs with no spaces or quotes. Leave out the RetroAchievements line if you skipped 4.6.</span></div>
+<pre>IGDB_CLIENT_ID=
+IGDB_CLIENT_SECRET=
+SCREENSCRAPER_USER=
+SCREENSCRAPER_PASSWORD=
+STEAMGRIDDB_API_KEY=
+RETROACHIEVEMENTS_API_KEY=
+HASHEOUS_API_ENABLED=true
+LAUNCHBOX_API_ENABLED=true
+ENABLE_SCHEDULED_UPDATE_LAUNCHBOX_METADATA=true
+SCHEDULED_UPDATE_LAUNCHBOX_METADATA_CRON=0 9 * * *
+ENABLE_SCHEDULED_RESCAN=true
+SCHEDULED_RESCAN_CRON=0 12 * * *
+ROMM_BASE_URL=https://arcade.songofeo.com</pre>
+<div class="see">the 13 lines (or 12) in nano.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.4</span><span class="tab">eels@cobra-stream</span><span>Press <b>Ctrl+O</b>, then <b>Enter</b>, then <b>Ctrl+X</b>.</span></div>
+<div class="see">the prompt again.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.5</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/chmod 600 /home/podsvc/.config/cobra/romm.env</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.6</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo mkdir -p /srv/storage/disks/dock1b/bios</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.7</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo chown podsvc:media /srv/storage/disks/dock1b/bios</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.8</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo chmod 2775 /srv/storage/disks/dock1b/bios</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.9</span><span class="tab">eels@cobra-stream</span><span>Back up the RomM settings file. Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/cp -p /home/podsvc/.config/containers/systemd/romm.container /home/podsvc/.config/romm.container.bak-2026-11-27</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.10</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/nano /home/podsvc/.config/containers/systemd/romm.container</pre>
+<div class="see">RomM's settings, with a line that starts <code>Volume=/srv/storage/disks/dock1b/roms</code>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.11</span><span class="tab">eels@cobra-stream</span><span>Put the cursor at the end of that <code>Volume=…/roms…</code> line, press <b>Enter</b>, and type these two lines:</span></div>
+<pre>Volume=/srv/storage/disks/dock1b/bios:/romm/library/bios
+EnvironmentFile=/home/podsvc/.config/cobra/romm.env</pre>
+<div class="see">the two new lines right under the roms line, still above <code>[Install]</code>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.12</span><span class="tab">eels@cobra-stream</span><span>Press <b>Ctrl+O</b>, then <b>Enter</b>, then <b>Ctrl+X</b>.</span></div>
+<div class="see">the prompt again.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.13</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/systemctl --user daemon-reload</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.14</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>sudo machinectl shell podsvc@ /usr/bin/systemctl --user restart romm</pre>
+<div class="see">the prompt again, with no error.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">5.15</span><span class="tab b">Browser</span><span>Wait one minute, then open <code>https://arcade.songofeo.com/metadata-sources</code>.</span></div>
+<div class="see"><b>API key set and valid</b> next to IGDB, ScreenScraper and SteamGridDB, and Hasheous and LaunchBox turned on.</div></div>
+
+<h2>Part 6. The first scan</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">6.1</span><span class="tab b">Browser</span><span>Open <code>https://arcade.songofeo.com/administration?tab=tasks</code>. Find the <b>LaunchBox metadata update</b> task and click its run button.</span></div>
+<div class="see">the task in <b>Task History</b> after a few minutes (it downloads the LaunchBox database once).</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">6.2</span><span class="tab b">Browser</span><span>Open <code>https://arcade.songofeo.com/scan</code>.</span></div>
+<div class="see"><b>Library scan</b>, with <b>Scan type</b>, <b>Providers</b> and <b>Platforms</b> on the left.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">6.3</span><span class="tab b">Browser</span><span><b>Scan type</b>: pick <b>Quick scan</b>. <b>Providers</b>: tick IGDB, ScreenScraper, SteamGridDB, LaunchBox, Hasheous and (if you did 4.6) RetroAchievements. <b>Platforms</b>: leave empty for all. <b>Calculate hashes</b>: leave on.</span></div>
+<div class="see">your picks ticked.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">6.4</span><span class="tab b">Browser</span><span>Click <b>Scan</b>. You can close the tab; it keeps going.</span></div>
+<div class="see"><b>Live progress</b> with each platform counting up games found and identified, then <b>Scan complete</b>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">6.5</span><span class="tab b">Browser</span><span>Back on <code>https://arcade.songofeo.com/scan</code>: <b>Scan type</b>: pick <b>Unmatched games</b>, same providers, click <b>Scan</b>.</span></div>
+<div class="see">a second, shorter scan that fills in more covers.</div></div>
+
+<h2>Part 7. Play a game in the browser</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">7.1</span><span class="tab b">Browser</span><span>On the home page click a platform (try SNES or Genesis), then a game, then <b>Play</b>.</span></div>
+<div class="see">the game running in the page. Click the picture once so the keyboard works.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">7.2</span><span class="tab b">Browser</span><span>Plug in a controller and press any button on it.</span></div>
+<div class="see">the game reacts to the controller.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">7.3</span><span class="tab b">Browser</span><span>Save inside the game (the game's own save menu), then leave the game with the browser's back button and confirm.</span></div>
+<div class="see">the game's page again. Its <b>Save data</b> tab lists the save.</div></div>
+
+<h2>Part 8. BIOS files</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">8.1</span><span class="tab b">Browser</span><span>Open the platform that needs a BIOS (table in Help 8.1), click the <b>Firmware / BIOS</b> tab, and drag the BIOS files onto it.</span></div>
+<div class="see"><b>N files uploaded successfully</b>, and the files listed.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">8.2</span><span class="tab">eels@cobra-stream</span><span>Type:</span></div>
+<pre>ls -R /srv/storage/disks/dock1b/bios</pre>
+<div class="see">a folder per platform with your BIOS files in it, so they are on the drive.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">8.3</span><span class="tab b">Browser</span><span>Play a game from that platform.</span></div>
+<div class="see">it starts with no <b>Firmware required</b> message.</div></div>
+
+<h2>Part 9. Add a player</h2>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">9.1</span><span class="tab b">Browser</span><span>Open <code>https://arcade.songofeo.com/administration?tab=users</code> and click <b>Add</b>.</span></div>
+<div class="see"><b>Create user</b>.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">9.2</span><span class="tab b">Browser</span><span><b>Username</b>: type the same name they use at the gate sign-in. <b>Password</b> and <b>Repeat password</b>: type the same password as their gate sign-in. <b>Permission group</b>: pick <b>Viewer</b>. Leave <b>Administrator</b> off. Click <b>Create</b>.</span></div>
+<div class="see"><b>User … created</b>, and the name in the list.</div></div>
+
+<div class="step"><div class="top"><span class="box"></span><span class="num">9.3</span><span class="tab b">Browser</span><span>Open <code>https://songofeo.com</code>, click the Arcade bay, then <b>Enter</b>.</span></div>
+<div class="see">RomM opens, already signed in as you.</div></div>
+
+<p class="small" style="margin-top:12pt">End of steps. RomM now scans by itself every day after the cabinet's nightly copy, and every player's saves stay their own.</p>
+
+<!-- ===================== HELP ===================== -->
+<div class="page help">
+<h2>Help, by step number</h2>
+
+<p><span class="n">1.1</span> No <code>arcade</code> pod means the port fix (F11) hasn't run yet, and RomM can't start: RomM and Kavita both use port 5000 inside the shared <code>stream</code> pod. Do Part 4 of the v3.6 run list (<code>V:\=ClaudeCode=\cobra-runlist-2026-11-21-v3.6.zip</code>) or the Thanksgiving fix list first. If it ends with "The setup wizard is ON", go straight to Part 3 here. Then come back to 1.2.</p>
+<p><span class="n">1.2</span> If there is no <code>romm.container</code>, RomM was started with the <code>scripts/podman</code> scripts instead. Stop and send a screenshot of 1.1 and 1.2; Part 5 is different there.</p>
+<p><span class="n">1.3</span> <code>romm</code> keeps restarting (the STATUS says <code>Up 3 seconds</code> each time): send a screenshot of 2.8's output.</p>
+<p><span class="n">1.4</span> If you would rather keep the old RomM data and only get back in: on the RomM sign-in page click <b>Forgot your password?</b>, type the admin username, then run 2.8's log command and look for <code>Reset link:</code>. Copy everything from <code>/reset-password?token=</code> to the end, and open <code>https://arcade.songofeo.com</code> plus that part. It works once, within 10 minutes. The host in the logged link says <code>0.0.0.0</code> until step 5.3 sets <code>ROMM_BASE_URL</code>.</p>
+<p><span class="n">2.2</span> <code>File exists</code>: an earlier reset used that name. Use <code>romm.pre-reset-2026-11-27b</code> here and in 2.4. Undo the whole Part 2: stop both (2.1), move the new <code>/srv/stream/romm</code> aside, move <code>romm.pre-reset-2026-11-27</code> back to <code>/srv/stream/romm</code>, start both (2.5, 2.7).</p>
+<p><span class="n">2.4</span> <code>config.yml</code> holds the cabinet's folder map and the netplay switch. If there wasn't one, RomM uses its defaults and Part 6 still works. The old database stays in the pre-reset folder until you delete it yourself.</p>
+<p><span class="n">2.6</span> MariaDB sets itself up the first time, so <code>ready for connections</code> can show twice. That's normal. RomM reaches it at <code>127.0.0.1:3306</code> inside the <code>arcade</code> pod, with the user <code>romm</code> and the password already written in <code>romm.container</code> and <code>romm-db.container</code>. A new empty database simply takes that same password.</p>
+<p><span class="n">2.8</span> <code>Address in use</code> means the port 5000 clash is back (Help 1.1). <code>Can't connect to</code> means MariaDB wasn't ready: run 2.7 again, using <code>restart</code> in place of <code>start</code>.</p>
+<p><span class="n">3.1</span> RomM sees the folder <code>/srv/storage/disks/dock1b/roms</code> as <code>roms/</code>, one folder per platform (<code>snes</code>, <code>n64</code>, <code>arcade</code> and so on). <b>Will create</b> would make empty folders there; leave it off. "No library structure detected" means dock1b isn't mounted or is empty: send a screenshot of the wizard and stop here.</p>
+<p><span class="n">3.3</span> Using the same username and password as the gate keeps the station pass working: one set of details for every app.</p>
+<p><span class="n">4.1</span> IGDB (Twitch's game database) needs a Twitch account with two-step login turned on: Twitch → Settings → Security and Privacy → <b>Set Up Two-Factor Authentication</b>.</p>
+<p><span class="n">4.2</span> The name must be unique on Twitch. A name someone already used fails with no message, so use random letters.</p>
+<p><span class="n">5.2</span> If the file already has lines, keep them, and only add the ones from 5.3 that are missing. A line that is there twice uses the last one.</p>
+<p><span class="n">5.3</span> What each line does:</p>
+<table>
+<tr><th>Line</th><th>What it does</th></tr>
+<tr><td class="k">IGDB_…</td><td>Names, descriptions, covers, screenshots, related games.</td></tr>
+<tr><td class="k">SCREENSCRAPER_…</td><td>Covers, 3D boxes, manuals. Strong on arcade and older consoles. Free account; a free account is slower at busy times.</td></tr>
+<tr><td class="k">STEAMGRIDDB_API_KEY</td><td>Nicer alternative cover art.</td></tr>
+<tr><td class="k">RETROACHIEVEMENTS_API_KEY</td><td>Achievements tab per game. Each player adds their own RetroAchievements username in their RomM profile.</td></tr>
+<tr><td class="k">HASHEOUS_API_ENABLED</td><td>Matches games by file fingerprint, no key needed. Catches badly named files.</td></tr>
+<tr><td class="k">LAUNCHBOX_…</td><td>The same game database as LaunchBox on the cabinet, refreshed daily at 09:00 UTC.</td></tr>
+<tr><td class="k">ENABLE_SCHEDULED_RESCAN, SCHEDULED_RESCAN_CRON</td><td>A Quick scan every day at 12:00 UTC (early morning in the US), after the cabinet's 3:30 am copy to dock1b. RomM's clock is UTC.</td></tr>
+<tr><td class="k">ROMM_BASE_URL</td><td>Makes password-reset links point at arcade.songofeo.com.</td></tr>
+</table>
+<p><span class="n">5.6</span> BIOS files need their own folder outside <code>roms/</code>. Without the 5.11 line, uploaded BIOS files lived inside the container and vanished at every restart or update. <code>dock1b/bios</code> sits beside <code>dock1b/roms</code>, so it is kept with the ROMs. The cabinet's nightly copy only adds files, so it never removes these.</p>
+<p><span class="n">5.9</span> The backup goes next to the folder, not into it, so the container system doesn't read it as a second RomM. Undo 5.11: copy the backup back over <code>romm.container</code>, then 5.13 and 5.14.</p>
+<p><span class="n">5.11</span> If the Thanksgiving fix list switches RomM to the <code>romm.sh</code> script later, the keys file still works (the script reads <code>~/.config/cobra/romm.env</code> by itself). The BIOS folder line must be added to the script then.</p>
+<p><span class="n">5.15</span> <b>API key invalid</b>: a key was pasted with a space or a missing character. Fix it with 5.2 to 5.4, then 5.14. <b>API key missing</b> on all of them: the <code>EnvironmentFile=</code> line is missing or misspelled (5.10).</p>
+<p><span class="n">6.3</span> The scan types:</p>
+<table>
+<tr><th>Scan type</th><th>When to use it</th></tr>
+<tr><td class="k">New platforms</td><td>You added a whole new platform folder. Fastest.</td></tr>
+<tr><td class="k">Quick scan</td><td>New games in folders RomM already knows. The daily scan uses this.</td></tr>
+<tr><td class="k">Unmatched games</td><td>Games with no cover or name yet, or after adding a new key.</td></tr>
+<tr><td class="k">Update metadata</td><td>Refresh info for games that are already matched.</td></tr>
+<tr><td class="k">Recalculate hashes</td><td>Rarely: after a file was replaced with the same name.</td></tr>
+<tr><td class="k">Complete rescan</td><td>Rarely: wipes all matches and starts over (saves are kept). Slowest.</td></tr>
+</table>
+<p><span class="n">6.4</span> Expect about 4 seconds per game. A platform under the wrong name or not found: <code>https://arcade.songofeo.com/library-management</code> → <b>Folder mappings</b> → <b>Folder aliases</b>, map the cabinet's folder name to the RomM platform, then a <b>New platforms</b> scan. Games still without covers after 6.5: rename the file to its proper title (for example <code>Super Metroid (USA).sfc</code>) on the cabinet's <code>D:\Roms</code>, wait for the nightly copy, then run <b>Unmatched games</b>.</p>
+<p><span class="n">7.1</span> Play needs https, so always use <code>arcade.songofeo.com</code>, not <code>10.6.9.20:8080</code>. PSP and a few heavy systems refuse to start over plain http. Keyboard keys and controller buttons are set in the player's own menu → <b>Controls</b>. Slow or stuttery: close other tabs, or pick a lighter core in the player menu → <b>Core</b> (snes9x rather than bsnes). Picking a new core makes old save states unusable; normal in-game saves still work.</p>
+<p><span class="n">7.3</span> In-game saves upload to RomM a few seconds after the game writes them, and follow you to any browser where you sign in as yourself. Save states (the player's quick-save) also upload, but they only load in the same core. Each player only sees their own saves. Netplay (playing together in the browser) is off unless <code>config.yml</code> turns it on, and the RomM team says it is unstable right now; it works best with everyone at home.</p>
+<p><span class="n">8.1</span> Common BIOS files (file names must match exactly; for several files, zip them and upload the zip):</p>
+<table>
+<tr><th>Platform</th><th>BIOS file names</th></tr>
+<tr><td class="k">PlayStation</td><td><code>scph1001.bin</code>, <code>scph5501.bin</code>, <code>scph5502.bin</code></td></tr>
+<tr><td class="k">Game Boy Advance</td><td><code>gba_bios.bin</code> (most games run without it)</td></tr>
+<tr><td class="k">Sega CD</td><td><code>bios_CD_U.bin</code>, <code>bios_CD_E.bin</code>, <code>bios_CD_J.bin</code></td></tr>
+<tr><td class="k">Saturn</td><td><code>saturn_bios.bin</code>, <code>mpr-17933.bin</code></td></tr>
+<tr><td class="k">Nintendo DS</td><td><code>firmware.bin</code>, <code>bios9.bin</code>, <code>bios7.bin</code></td></tr>
+<tr><td class="k">Arcade (Neo Geo games)</td><td><code>neogeo.zip</code>, put in the arcade folder with the games</td></tr>
+</table>
+<p>Use BIOS files dumped from consoles you own. RomM doesn't include any.</p>
+<p><span class="n">8.2</span> <code>No such file or directory</code>: step 5.11 wasn't saved or 5.14 didn't run, so the upload went into the container. Do 5.10 to 5.14, then upload again.</p>
+<p><span class="n">9.1</span> Or click <b>Invite link</b>, pick <b>Role</b>: User and an expiry, click <b>Generate</b>, and send the link: they pick their own username and password (use the same as their gate sign-in). <b>Viewer</b> lets a player browse, play and keep their own saves and collections; <b>Editor</b> also lets them edit games and upload ROMs. To hide platforms from one player (for example for kids): edit the user → <b>Access</b>.</p>
+<p><span class="n">9.3</span> The gate signs people in once, then RomM asks for its own login the first time on each device and remembers it.</p>
+
+<h3>How the Arcade fits together</h3>
+<table>
+<tr><th>Piece</th><th>Where</th><th>What it holds</th></tr>
+<tr><td class="k">RomM</td><td>SGIN, pod <code>arcade</code>, port 8080 → <code>arcade.songofeo.com</code></td><td>The web arcade and the in-browser player</td></tr>
+<tr><td class="k">MariaDB (romm-db)</td><td>Same pod, <code>/srv/stream/romm/db</code></td><td>Accounts, games found, play history, save records</td></tr>
+<tr><td class="k">Covers</td><td><code>/srv/stream/romm/resources</code></td><td>Downloaded art (a rescan gets it back)</td></tr>
+<tr><td class="k">Saves and states</td><td><code>/srv/stream/romm/assets</code></td><td>Every player's saves, per game</td></tr>
+<tr><td class="k">ROMs</td><td><code>dock1b/roms</code>, nightly copy from the cabinet's <code>D:\Roms</code></td><td>The games (main copy stays on the cabinet)</td></tr>
+<tr><td class="k">BIOS</td><td><code>dock1b/bios</code></td><td>Console BIOS files</td></tr>
+<tr><td class="k">Scoreboard</td><td>Gate, <code>scores.songofeo.com</code></td><td>Cabinet high scores (.hi files from RetroArch/MAME). Browser games in RomM don't write .hi files, so they don't reach the board. The High Scorers Lounge (being built separately) will join RomM's "latest played" with the board.</td></tr>
+</table>
+
+<p class="small" style="margin-top:10pt"><b>Checked against (2026-11-27):</b> RomM 5.4.1 (latest stable, released 2026-10-22; 5.5.0 is still beta), RomM docs 5.4.0, RomM's own 5.4.1 screen text, MariaDB 11, Podman 5.4.2 with Quadlet, Twitch developer console, ScreenScraper, SteamGridDB, RetroAchievements.</p>
+</div>
+
+</body>
+</html>
