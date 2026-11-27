@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CR-ETV Live TV Channels Field Guide</title>
+<style>
+  @page { size: Letter; margin: 0.5in 0.55in; background: #0e100e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0e100e; color: #d9e2d9; font: 9.6pt/1.4 "DejaVu Sans", sans-serif; }
+  h1, h2, h3, code, .mono, .where, .num, th { font-family: "DejaVu Sans Mono", monospace; }
+  h1 { color: #39ff6a; font-size: 19pt; margin: 2pt 0 3pt; letter-spacing: 1px; }
+  h2 { color: #39ff6a; font-size: 12.5pt; margin: 14pt 0 5pt; padding: 3pt 0 3pt 8pt; border-left: 4pt solid #39ff6a; break-after: avoid; }
+  h3 { color: #ffd23f; font-size: 10pt; margin: 10pt 0 4pt; break-after: avoid; }
+  p { margin: 3pt 0 5pt; }
+  code { color: #ffd23f; font-size: 8.8pt; }
+  b.f { color: #ffffff; }
+  .top { font: 8pt "DejaVu Sans Mono", monospace; color: #ff4b5a; letter-spacing: 2px; }
+  .intro { border-top: 1px solid #2f4a33; border-bottom: 1px solid #2f4a33; padding: 4pt 0; margin: 4pt 0 6pt; font-size: 8.8pt; color: #9fb39f; }
+  .intro b { color: #d9e2d9; }
+  .step { display: grid; grid-template-columns: 13pt 30pt 1fr; column-gap: 5pt; border: 1px solid #2a352b; border-left: 3pt solid #2f4a33; padding: 4pt 7pt; margin: 3pt 0; break-inside: avoid; }
+  .box2 { width: 10pt; height: 10pt; border: 1.3px solid #39ff6a; margin-top: 2pt; }
+  .num { color: #39ff6a; font-weight: bold; font-size: 9.2pt; }
+  .where { display: inline-block; font-size: 7.4pt; color: #7fd8ff; border: 1px solid #2c5566; padding: 0 4pt; margin-right: 4pt; vertical-align: 1px; }
+  .see { display: block; color: #9fb39f; font-size: 8.6pt; margin-top: 2pt; }
+  .see::before { content: "YOU SHOULD SEE \25B8  "; font: bold 7pt "DejaVu Sans Mono", monospace; color: #39ff6a; }
+  .cmd { display: block; background: #050705; border: 1px solid #2f4a33; color: #ffd23f; font: 9pt "DejaVu Sans Mono", monospace; padding: 3pt 6pt; margin: 3pt 0 1pt; }
+  .tag { display: inline-block; font: bold 7pt "DejaVu Sans Mono", monospace; padding: 0 4pt; border: 1px solid; margin-right: 4pt; vertical-align: 1px; }
+  .ok { color: #39ff6a; border-color: #39ff6a; } .warn { color: #ffd23f; border-color: #ffd23f; } .bad { color: #ff4b5a; border-color: #ff4b5a; }
+  .note { border: 1px solid #6b5a1c; background: #19170e; padding: 4pt 8pt; margin: 4pt 0; font-size: 8.6pt; break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 4pt 0 8pt; font-size: 8.6pt; }
+  tr { break-inside: avoid; }
+  th { background: #1b2a1d; color: #39ff6a; text-align: left; font-size: 8pt; padding: 3pt 5pt; border: 1px solid #2f4a33; }
+  td { padding: 3pt 5pt; border: 1px solid #2a352b; vertical-align: top; }
+  td.k { color: #fff; font-weight: bold; white-space: nowrap; }
+  /* screen mock-ups: flat boxes only */
+  .mock { border: 1px solid #3a4a3c; background: #121512; margin: 5pt 0 7pt; break-inside: avoid; font-size: 8.2pt; }
+  .mock .bar { background: #1b2a1d; color: #9fb39f; font: 7.5pt "DejaVu Sans Mono", monospace; padding: 2pt 6pt; border-bottom: 1px solid #3a4a3c; }
+  .mock .body { padding: 5pt 8pt; }
+  .fld { display: grid; grid-template-columns: 120pt 1fr; margin: 1.5pt 0; }
+  .fld span:first-child { color: #9fb39f; }
+  .fld span:last-child { color: #ffd23f; border: 1px solid #3a4a3c; padding: 0 4pt; font-family: "DejaVu Sans Mono", monospace; }
+  .btn { display: inline-block; border: 1px solid #39ff6a; color: #39ff6a; padding: 0 6pt; font: bold 7.5pt "DejaVu Sans Mono", monospace; margin: 3pt 4pt 0 0; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 3pt; margin: 6pt 0; break-inside: avoid; }
+  .flow .n { border: 1px solid #39ff6a; color: #d9e2d9; padding: 3pt 5pt; font-size: 7.8pt; text-align: center; }
+  .flow .n b { display: block; color: #39ff6a; font: bold 7pt "DejaVu Sans Mono", monospace; }
+  .flow .a { color: #ffd23f; font-weight: bold; }
+  .grid { display: grid; grid-template-columns: 60pt repeat(4, 1fr); border: 1px solid #3a4a3c; font-size: 7.6pt; break-inside: avoid; margin: 5pt 0; }
+  .grid div { border: 1px solid #263027; padding: 2pt 4pt; }
+  .grid .h { background: #1b2a1d; color: #39ff6a; font-family: "DejaVu Sans Mono", monospace; }
+  .grid .ad { color: #ffd23f; }
+  .page { break-before: page; }
+  .app h3 { margin-top: 8pt; }
+  .app p, .app li { font-size: 8.8pt; }
+  ul { margin: 2pt 0 5pt 14pt; padding: 0; } li { margin: 1.5pt 0; }
+  .foot { margin-top: 10pt; border-top: 1px solid #2f4a33; padding-top: 4pt; font: 7.8pt "DejaVu Sans Mono", monospace; color: #7c8f7c; }
+</style>
+</head>
+<body>
+
+<div class="top">CLAUDE-VIPER'S VISUAL FIELD GUIDES · COBRA CORPORATE · CR-ETV · v1 2026-11-27</div>
+<h1>Live TV Channels: ErsatzTV &rarr; Jellyfin Guide</h1>
+<div class="intro">Tick each box as you go. Everything happens on <b>the-box</b> in its browser, in two tabs: <b>ErsatzTV</b> = <code>http://10.6.9.20:8409</code> and <b>Jellyfin</b> = <code>http://10.6.9.20:8096</code> (signed in as your admin). Stuck on a step? Find its number in <b>Help</b> at the end.</div>
+
+<h2>Part 1 &middot; Open the two tabs</h2>
+
+<div class="step"><div class="box2"></div><div class="num">1.1</div><div><span class="where">the-box · Browser</span>Open a new tab and type <code>http://10.6.9.20:8409</code> then press Enter.<span class="see">The ErsatzTV page with a menu down the left side. A "Not secure" label in the address bar is normal here.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">1.2</div><div><span class="where">ErsatzTV tab</span>Look at the version in the bottom-left corner of the menu (or on the Home page).<span class="see">A version of <code>26.14.0</code> or newer. If it is older, see Help 1.2.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">1.3</div><div><span class="where">ErsatzTV tab</span>Check the top of the page for a yellow or red warning banner.<span class="see">No banner. If one mentions <code>JWT</code> or "IPTV disabled", stop and see Help 1.3.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">1.4</div><div><span class="where">the-box · Browser</span>Open a second tab and type <code>http://10.6.9.20:8096</code> then sign in as your Jellyfin admin.<span class="see">Your Jellyfin home screen with the shelves.</span></div></div>
+
+<h2>Part 2 &middot; Let ErsatzTV read your Jellyfin library</h2>
+
+<div class="step"><div class="box2"></div><div class="num">2.1</div><div><span class="where">Jellyfin tab</span>Click the <b>Admin Panel</b> icon (top right) to open the <b>Dashboard</b>.<span class="see">The Dashboard, with a left menu that includes Libraries, Users and Live TV.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.2</div><div><span class="where">Jellyfin tab</span>Left menu: click <b>API Keys</b> (under Advanced).<span class="see">A list of API keys (it may be empty) and a <b>+</b> button.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.3</div><div><span class="where">Jellyfin tab</span>Click <b>+</b>. <b class="f">App name</b>: type <code>ersatztv</code>. Click <b>Ok</b>.<span class="see">A new row named <code>ersatztv</code> with a long key of letters and numbers.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.4</div><div><span class="where">Jellyfin tab</span>Select the whole key with the mouse and press <b>Ctrl+C</b>.<span class="see">Nothing changes on screen; the key is on the clipboard.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.5</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Media Sources</b> &rarr; <b>Jellyfin</b>. Click <b>Connect Jellyfin</b>.<span class="see">A form with two boxes: Address and Api Key.</span></div></div>
+
+<div class="mock"><div class="bar">ErsatzTV &rsaquo; Media Sources &rsaquo; Jellyfin &rsaquo; Connect Jellyfin</div><div class="body">
+<div class="fld"><span>Address</span><span>http://127.0.0.1:8096</span></div>
+<div class="fld"><span>Api Key</span><span>(paste with Ctrl+V)</span></div>
+<span class="btn">SAVE CHANGES</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.6</div><div><span class="where">ErsatzTV tab</span><b class="f">Address</b>: type <code>http://127.0.0.1:8096</code>.<span class="see">The address in the box exactly as typed, with no slash at the end.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.7</div><div><span class="where">ErsatzTV tab</span><b class="f">Api Key</b>: click the box and press <b>Ctrl+V</b>. Click <b>Save Changes</b>.<span class="see">Your Jellyfin server listed on the Jellyfin page with an <b>Edit Libraries</b> button.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.8</div><div><span class="where">ErsatzTV tab</span>Click <b>Edit Libraries</b>. Turn on the <b class="f">Synchronize</b> switch for your <b>Movies</b> library and your <b>Shows</b> library. Click <b>Save Changes</b>.<span class="see">Both switches on. ErsatzTV starts reading the library in the background.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">2.9</div><div><span class="where">ErsatzTV tab</span>Wait 5 to 20 minutes, then left menu: <b>Media</b> &rarr; <b>TV Shows</b>.<span class="see">Posters for your shows. If the page is empty after 30 minutes, see Help 2.9.</span></div></div>
+
+<h2>Part 3 &middot; Add the filler folder (commercials, PSAs, bumpers)</h2>
+
+<div class="step"><div class="box2"></div><div class="num">3.1</div><div><span class="where">the-box · File Explorer</span>Address bar: type <code>\\cobra-stream\media\wd1\filler</code> and press Enter. Write down the names of the subfolders (for example <code>ads</code>, <code>psa</code>).<span class="see">Your filler videos and their subfolders.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.2</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Media Sources</b> &rarr; <b>Local</b>.<span class="see">The built-in local libraries: Movies, Shows, Music Videos, Other Videos, Songs.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.3</div><div><span class="where">ErsatzTV tab</span>Click the edit (pencil) button on the <b>Other Videos</b> row.<span class="see">The library's page with a <b>Path</b> box and an <b>Add Path</b> button.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.4</div><div><span class="where">ErsatzTV tab</span><b class="f">Path</b>: type <code>/media/wd1/filler</code>. Click <b>Add Path</b>. Click <b>Save Changes</b>.<span class="see"><code>/media/wd1/filler</code> listed under the library. A scan starts on its own.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.5</div><div><span class="where">ErsatzTV tab</span>Wait 2 minutes, then left menu: <b>Media</b> &rarr; <b>Other Videos</b>.<span class="see">Tiles for your filler videos.</span></div></div>
+
+<h3>Turn the filler into lists ErsatzTV can pick from</h3>
+
+<div class="step"><div class="box2"></div><div class="num">3.6</div><div><span class="where">ErsatzTV tab</span>Click the search box at the top (next to the logo). Type the line below and press Enter.<span class="cmd">type:other_video</span><span class="see">Every filler video in the results.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.7</div><div><span class="where">ErsatzTV tab</span>Click <b>Save As</b>. Name: type <code>All Filler</code>. Save.<span class="see"><code>All Filler</code> listed under <b>Lists</b> &rarr; <b>Smart Collections</b>.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.8</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Media</b> &rarr; <b>Other Videos</b>. Click the small selection button in the top-left corner of each <b>commercial</b> tile.<span class="see">A tick on each commercial you picked, and an <b>Add To Collection</b> button at the top.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.9</div><div><span class="where">ErsatzTV tab</span>Click <b>Add To Collection</b>. Type the new name <code>Commercials</code>. Save.<span class="see"><code>Commercials</code> listed under <b>Lists</b> &rarr; <b>Collections</b>.</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">3.10</div><div><span class="where">ErsatzTV tab</span>Repeat 3.8 and 3.9 for your PSA videos, with the name <code>PSAs</code>. Skip if you have none.<span class="see"><code>PSAs</code> listed under <b>Lists</b> &rarr; <b>Collections</b>.</span></div></div>
+
+<h2>Part 4 &middot; Hardware transcoding (Quick Sync on the SGIN)</h2>
+
+<div class="step"><div class="box2"></div><div class="num">4.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>FFmpeg Profiles</b>. Click the edit button on the default profile.<span class="see">The profile form.</span></div></div>
+
+<div class="mock"><div class="bar">ErsatzTV &rsaquo; FFmpeg Profiles &rsaquo; Edit</div><div class="body">
+<div class="fld"><span>Name</span><span>Cobra QSV 1080p</span></div>
+<div class="fld"><span>Hardware Acceleration</span><span>Vaapi</span></div>
+<div class="fld"><span>VAAPI Driver</span><span>iHD</span></div>
+<div class="fld"><span>VAAPI Device</span><span>/dev/dri/renderD128</span></div>
+<div class="fld"><span>Resolution</span><span>1920x1080</span></div>
+<div class="fld"><span>Video Format</span><span>h264</span></div>
+<div class="fld"><span>Audio Format</span><span>aac</span></div>
+<span class="btn">SAVE CHANGES</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">4.2</div><div><span class="where">ErsatzTV tab</span><b class="f">Name</b>: type <code>Cobra QSV 1080p</code>.<span class="see">The new name in the box.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">4.3</div><div><span class="where">ErsatzTV tab</span><b class="f">Hardware Acceleration</b>: pick <b>Vaapi</b>.<span class="see">New boxes appear for VAAPI Driver and VAAPI Device.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">4.4</div><div><span class="where">ErsatzTV tab</span><b class="f">VAAPI Driver</b>: pick <b>iHD</b>. <b class="f">VAAPI Device</b>: pick <code>/dev/dri/renderD128</code>.<span class="see">No red warning under the boxes. A warning means this choice won't work; see Help 4.4.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">4.5</div><div><span class="where">ErsatzTV tab</span><b class="f">Resolution</b>: pick <b>1920x1080</b>. <b class="f">Video Format</b>: pick <b>h264</b>. <b class="f">Audio Format</b>: pick <b>aac</b>. Click <b>Save Changes</b>.<span class="see">The profile list shows <code>Cobra QSV 1080p</code>.</span></div></div>
+
+<h2>Part 5 &middot; Commercial breaks (Filler Presets)</h2>
+
+<p>Make these three. You attach them to a schedule in Part 7. Breaks play <b>between</b> episodes.</p>
+
+<table>
+<tr><th>Preset name (type it)</th><th>Filler Kind (pick)</th><th>Filler Mode (pick)</th><th>Number (type)</th><th>Collection Type / Collection (pick)</th><th>What it does</th></tr>
+<tr><td class="k">Break 1-3 Ads</td><td>Post-roll</td><td>Duration</td><td>Duration: <code>00:03:00</code></td><td>Collection / <b>Commercials</b></td><td>After each episode, as many whole ads as fit in 3 minutes (usually 1 to 3).</td></tr>
+<tr><td class="k">PSA Before Show</td><td>Pre-roll</td><td>Count</td><td>Count: <code>1</code></td><td>Collection / <b>PSAs</b></td><td>One PSA right before each episode.</td></tr>
+<tr><td class="k">Fill The Gaps</td><td>Fallback</td><td>(none)</td><td>(none)</td><td>Smart Collection / <b>All Filler</b></td><td>Fills any dead air with filler instead of the "offline" picture.</td></tr>
+</table>
+
+<div class="step"><div class="box2"></div><div class="num">5.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Lists</b> &rarr; <b>Filler Presets</b>. Click <b>Add Filler Preset</b>.<span class="see">An empty preset form.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">5.2</div><div><span class="where">ErsatzTV tab</span>Fill in the first row of the table above, one box at a time. Click <b>Save Changes</b>.<span class="see"><code>Break 1-3 Ads</code> in the Filler Presets list.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">5.3</div><div><span class="where">ErsatzTV tab</span>Repeat 5.1 and 5.2 for the second row (skip if you have no PSAs).<span class="see"><code>PSA Before Show</code> in the list.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">5.4</div><div><span class="where">ErsatzTV tab</span>Repeat 5.1 and 5.2 for the third row.<span class="see">Two or three presets in the list.</span></div></div>
+
+<div class="note"><span class="tag warn">OLD-TV TIMING</span>Want shows to start on the hour and half hour like real TV? Use <b>Post-roll</b> + <b>Pad</b> + <b>Pad To Nearest Minute</b> <code>30</code> instead of the first row. A 22-minute episode then gets about 8 minutes of ads. Details in Help 5.2.</div>
+
+<h2>Part 6 &middot; Pick the shows for channel 1</h2>
+
+<div class="step"><div class="box2"></div><div class="num">6.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Media</b> &rarr; <b>TV Shows</b>. Click the selection button on each show you want on this channel.<span class="see">A tick on each show you picked.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">6.2</div><div><span class="where">ErsatzTV tab</span>Click <b>Add To Collection</b>. Type the new name <code>Channel 1 Shows</code>. Save.<span class="see"><code>Channel 1 Shows</code> under <b>Lists</b> &rarr; <b>Collections</b>.</span></div></div>
+
+<h2>Part 7 &middot; Make the schedule</h2>
+
+<div class="step"><div class="box2"></div><div class="num">7.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Schedules</b>. Click <b>Add Schedule</b>.<span class="see">A form with a Name box and some switches.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">7.2</div><div><span class="where">ErsatzTV tab</span><b class="f">Name</b>: type <code>Channel 1 Schedule</code>. Turn on <b class="f">Keep Multi-Part Episodes Together</b>. Leave the other switches off. Click <b>Save Changes</b>.<span class="see"><code>Channel 1 Schedule</code> in the Schedules list.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">7.3</div><div><span class="where">ErsatzTV tab</span>On that row, click <b>Edit Schedule Items</b>, then <b>Add Schedule Item</b>.<span class="see">One new item row with its settings below.</span></div></div>
+
+<div class="mock"><div class="bar">ErsatzTV &rsaquo; Schedules &rsaquo; Channel 1 Schedule &rsaquo; Edit Schedule Items</div><div class="body">
+<div class="fld"><span>Start Type</span><span>Dynamic</span></div>
+<div class="fld"><span>Collection Type</span><span>Collection</span></div>
+<div class="fld"><span>Collection</span><span>Channel 1 Shows</span></div>
+<div class="fld"><span>Playback Order</span><span>Shuffle</span></div>
+<div class="fld"><span>Playout Mode</span><span>Flood</span></div>
+<div class="fld"><span>Pre-Roll Filler</span><span>PSA Before Show</span></div>
+<div class="fld"><span>Post-Roll Filler</span><span>Break 1-3 Ads</span></div>
+<div class="fld"><span>Fallback Filler</span><span>Fill The Gaps</span></div>
+<div class="fld"><span>Guide Mode</span><span>Normal</span></div>
+<span class="btn">SAVE CHANGES</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">7.4</div><div><span class="where">ErsatzTV tab</span><b class="f">Start Type</b>: pick <b>Dynamic</b>. <b class="f">Collection Type</b>: pick <b>Collection</b>. <b class="f">Collection</b>: pick <b>Channel 1 Shows</b>.<span class="see">The item row now names Channel 1 Shows.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">7.5</div><div><span class="where">ErsatzTV tab</span><b class="f">Playback Order</b>: pick <b>Shuffle</b>. <b class="f">Playout Mode</b>: pick <b>Flood</b>.<span class="see">Both values shown in the item's settings.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">7.6</div><div><span class="where">ErsatzTV tab</span><b class="f">Pre-Roll Filler</b>: pick <b>PSA Before Show</b> (or leave empty). <b class="f">Post-Roll Filler</b>: pick <b>Break 1-3 Ads</b>. <b class="f">Fallback Filler</b>: pick <b>Fill The Gaps</b>.<span class="see">The three preset names in their boxes.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">7.7</div><div><span class="where">ErsatzTV tab</span><b class="f">Guide Mode</b>: pick <b>Normal</b>. Click <b>Save Changes</b>.<span class="see">A green "saved" message, or the item list without errors.</span></div></div>
+
+<h2>Part 8 &middot; Make the channel</h2>
+
+<div class="step"><div class="box2"></div><div class="num">8.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Channels</b>. Click <b>Add Channel</b>.<span class="see">The channel form.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">8.2</div><div><span class="where">ErsatzTV tab</span><b class="f">Number</b>: type <code>1</code>. <b class="f">Name</b>: type your channel name, for example <code>Cobra Classics</code>.<span class="see">Both values in their boxes.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">8.3</div><div><span class="where">ErsatzTV tab</span><b class="f">FFmpeg Profile</b>: pick <b>Cobra QSV 1080p</b>. <b class="f">Streaming Mode</b>: pick <b>MPEG-TS</b>.<span class="see">Both values shown.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">8.4</div><div><span class="where">ErsatzTV tab</span>Optional: click <b>Upload Logo</b> and pick a picture from the-box. Click <b>Save Changes</b>.<span class="see">Channel 1 in the Channels list.</span></div></div>
+
+<h2>Part 9 &middot; Start the channel (Playout)</h2>
+
+<div class="step"><div class="box2"></div><div class="num">9.1</div><div><span class="where">ErsatzTV tab</span>Left menu: <b>Playouts</b>. Click <b>Add Playout</b>.<span class="see">A form with Channel and Schedule boxes.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">9.2</div><div><span class="where">ErsatzTV tab</span><b class="f">Channel</b>: pick <b>1 - Cobra Classics</b>. <b class="f">Schedule</b>: pick <b>Channel 1 Schedule</b>. Click <b>Add Playout</b>.<span class="see">A playout row for channel 1.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">9.3</div><div><span class="where">ErsatzTV tab</span>Click the playout row to open it.<span class="see">A timeline: episodes with your ads and PSAs between them, for the next days.</span></div></div>
+
+<div class="grid">
+<div class="h">Time</div><div class="h">8:00</div><div class="h">8:22</div><div class="h">8:25</div><div class="h">8:26</div>
+<div class="h">Ch 1</div><div>Episode A</div><div class="ad">Ad, Ad (Break 1-3 Ads)</div><div class="ad">PSA</div><div>Episode B &hellip;</div>
+</div>
+
+<h2>Part 10 &middot; Put the channels in Jellyfin Live TV</h2>
+
+<div class="step"><div class="box2"></div><div class="num">10.1</div><div><span class="where">ErsatzTV tab</span>Top-right of the page: click the <b>M3U</b> button to copy the channel list address.<span class="see">A "copied" message.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.2</div><div><span class="where">the-box · Notepad</span>Open Notepad and press <b>Ctrl+V</b>. Replace the start of the line up to <code>:8409</code> with <code>http://127.0.0.1:8409</code>.<span class="see">A line like <code>http://127.0.0.1:8409/iptv/channels.m3u</code>.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.3</div><div><span class="where">ErsatzTV tab</span>Top-right: click the <b>XMLTV</b> button. Paste it into Notepad on a new line and change its start the same way.<span class="see">A second line like <code>http://127.0.0.1:8409/iptv/xmltv.xml</code>.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.4</div><div><span class="where">Jellyfin tab</span>Dashboard left menu: click <b>Live TV</b>.<span class="see">Sections named <b>Tuner Devices</b> and <b>TV Guide Data Providers</b>, each with a <b>+</b>.</span></div></div>
+
+<div class="mock"><div class="bar">Jellyfin &rsaquo; Dashboard &rsaquo; Live TV &rsaquo; Tuner Devices &rsaquo; +</div><div class="body">
+<div class="fld"><span>Tuner Type</span><span>M3U Tuner</span></div>
+<div class="fld"><span>File or URL</span><span>http://127.0.0.1:8409/iptv/channels.m3u</span></div>
+<div class="fld"><span>Simultaneous stream limit</span><span>0</span></div>
+<span class="btn">SAVE</span></div></div>
+
+<div class="step"><div class="box2"></div><div class="num">10.5</div><div><span class="where">Jellyfin tab</span>Click <b>+</b> next to <b>Tuner Devices</b>. <b class="f">Tuner Type</b>: pick <b>M3U Tuner</b>.<span class="see">A <b>File or URL</b> box appears.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.6</div><div><span class="where">Jellyfin tab</span><b class="f">File or URL</b>: paste the first Notepad line. <b class="f">Simultaneous stream limit</b>: leave <code>0</code>. Leave the other boxes as they are. Click <b>Save</b>.<span class="see">The M3U tuner listed under Tuner Devices.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.7</div><div><span class="where">Jellyfin tab</span>Click <b>+</b> next to <b>TV Guide Data Providers</b>. Pick <b>XMLTV</b>.<span class="see">An XMLTV form with a <b>File or URL</b> box.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.8</div><div><span class="where">Jellyfin tab</span><b class="f">File or URL</b>: paste the second Notepad line. Click <b>Save</b>.<span class="see">XMLTV listed under TV Guide Data Providers.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">10.9</div><div><span class="where">Jellyfin tab</span>Dashboard left menu: <b>Scheduled Tasks</b>. Under <b>Live TV</b>, click the run (&#9654;) button next to <b>Refresh Guide</b>.<span class="see">A progress bar, then "Last ran a few seconds ago".</span></div></div>
+
+<h2>Part 11 &middot; Watch it and give people access</h2>
+
+<div class="step"><div class="box2"></div><div class="num">11.1</div><div><span class="where">Jellyfin tab</span>Click the Jellyfin logo (top left) to go home. Click <b>Live TV</b>, then the <b>Guide</b> tab.<span class="see">A TV guide grid with <b>1 Cobra Classics</b> and show names in the time slots.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">11.2</div><div><span class="where">Jellyfin tab</span>Click channel 1 in the guide.<span class="see">Video starts within about 10 seconds, partway into an episode or a break.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">11.3</div><div><span class="where">Jellyfin tab</span>Dashboard &rarr; <b>Users</b> &rarr; click a person &rarr; under <b>Feature Access</b> tick <b class="f">Allow Live TV access</b> &rarr; <b>Save</b>. Repeat for each person.<span class="see">"Settings saved." That person now sees Live TV.</span></div></div>
+<div class="step"><div class="box2"></div><div class="num">11.4</div><div><span class="where">Roku TV · Jellyfin app</span>Home screen: open <b>Live TV</b>, then pick channel 1.<span class="see">The same channel playing on the TV.</span></div></div>
+
+<h2>Part 12 &middot; Add more channels (repeat card)</h2>
+
+<table>
+<tr><th>For channel 2, 3 &hellip;</th><th>Do</th><th>Change</th></tr>
+<tr><td class="k">Shows</td><td>Part 6</td><td>Name it <code>Channel 2 Shows</code></td></tr>
+<tr><td class="k">Schedule</td><td>Part 7</td><td>Name it <code>Channel 2 Schedule</code>; reuse the same filler presets</td></tr>
+<tr><td class="k">Channel</td><td>Part 8</td><td>Number <code>2</code> and a new name</td></tr>
+<tr><td class="k">Playout</td><td>Part 9</td><td>Channel 2 + Channel 2 Schedule</td></tr>
+<tr><td class="k">Jellyfin</td><td>Step 10.9 only</td><td>The M3U and XMLTV addresses stay the same; just refresh the guide</td></tr>
+</table>
+
+<!-- ===================== APPENDIX ===================== -->
+<div class="page app">
+<h2>Help &middot; by step number</h2>
+
+<h3>How the pieces fit</h3>
+<div class="flow">
+<div class="n"><b>JELLYFIN LIBRARY</b>Movies, Shows</div><span class="a">&rarr;</span>
+<div class="n"><b>FILLER FOLDER</b>wd1/filler</div><span class="a">&rarr;</span>
+<div class="n"><b>COLLECTIONS</b>Channel 1 Shows, Commercials</div><span class="a">&rarr;</span>
+<div class="n"><b>FILLER PRESETS</b>breaks</div><span class="a">&rarr;</span>
+<div class="n"><b>SCHEDULE</b>what plays, in what order</div><span class="a">&rarr;</span>
+<div class="n"><b>CHANNEL + PLAYOUT</b>the timeline</div><span class="a">&rarr;</span>
+<div class="n"><b>M3U + XMLTV</b>channel list, guide</div><span class="a">&rarr;</span>
+<div class="n"><b>JELLYFIN LIVE TV</b>Roku, phones, browser</div>
+</div>
+<p>Both apps run in the same <code>stream</code> pod on the SGIN, so they reach each other at <code>127.0.0.1</code>. Both see the disks at <code>/media</code>, so ErsatzTV plays files straight off the drives. ErsatzTV stays LAN-only; friends outside watch the channels through Jellyfin (<code>tv.songofeo.com</code>).</p>
+
+<h3>Words used</h3>
+<table>
+<tr><td class="k">Collection</td><td>A list you pick by hand (ticked posters).</td></tr>
+<tr><td class="k">Smart Collection</td><td>A saved search that updates itself when new files arrive.</td></tr>
+<tr><td class="k">Filler Preset</td><td>A rule for breaks: where (Pre-roll, Mid-roll, Post-roll, Tail, Fallback), how much (Count, Duration, Pad), and from which list.</td></tr>
+<tr><td class="k">Schedule</td><td>What plays and in what order. Reusable by many channels.</td></tr>
+<tr><td class="k">Playout</td><td>A schedule attached to a channel: the actual minute-by-minute timeline.</td></tr>
+</table>
+
+<h3>1.2 Version is older than 26.14.0</h3>
+<p>The pod runs the <code>ghcr.io/ersatztv/legacy:latest</code> image and updates itself with podman auto-update. "Legacy" is the project's name for the current, maintained ErsatzTV (a newer engine called ErsatzTV Next runs inside it). Ask Claude for the update command for the SGIN; it is not part of this guide.</p>
+
+<h3>1.3 Banner about JWT or IPTV disabled</h3>
+<p>ErsatzTV 26.13.0 removed stream passwords (JWT). If the old setting <code>JWT__ISSUERSIGNINGKEY</code> is set, the M3U and guide links are switched off. The Cobra pod script does not set it, so you should never see this. If you do, send Claude a screenshot.</p>
+
+<h3>2.3 No API Keys page or no + button</h3>
+<p>On Jellyfin 12 the Admin Panel icon is at the top right. API Keys is under the <b>Advanced</b> group of the Dashboard menu. If your screen names it differently, send Claude a screenshot.</p>
+
+<h3>2.9 No shows after 30 minutes</h3>
+<ul>
+<li>Check the Address is <code>http://127.0.0.1:8096</code>, not the <code>songofeo.com</code> name (that one goes through the gate login and fails).</li>
+<li>Make a fresh API key (2.3) and paste it again (2.7).</li>
+<li>Path problems: both containers see the drives at <code>/media</code>, so <b>Edit Path Replacements</b> is not needed. Leave it empty.</li>
+<li>ErsatzTV only syncs Jellyfin <b>Movies</b> and <b>Shows</b> libraries. Filler comes in through the Local library in Part 3.</li>
+</ul>
+
+<h3>3.6 Search shows nothing</h3>
+<p>Try <code>library_name:"Other Videos"</code> instead. To make one list per subfolder automatically, you can also add a separate Local library per subfolder later; ask Claude.</p>
+
+<h3>3.8 Too many tiles to click one by one</h3>
+<p>Search first (for example a word in the file names), then tick from the results. Or skip the Commercials collection and use the <b>All Filler</b> smart collection in Part 5 for every row.</p>
+
+<h3>4.4 Red warning on the FFmpeg profile</h3>
+<p>Try <b>Hardware Acceleration</b> = <b>Qsv</b> with the same device. If both warn, the SGIN's Intel driver needs checking (manual part 3.3). Troubleshooting &rarr; <b>Hardware</b> tab in ErsatzTV shows what it found. Until then, <b>None</b> works but uses much more CPU.</p>
+
+<h3>5.2 Filler modes explained</h3>
+<table>
+<tr><td class="k">Count</td><td>Exactly that many clips.</td></tr>
+<tr><td class="k">Duration</td><td>As many whole clips as fit in the time you set. Best for "1 to 3 ads".</td></tr>
+<tr><td class="k">Pad</td><td>Plays clips until the clock reaches a multiple of the minutes you set (30 = :00 and :30). Real-TV feel, longer breaks.</td></tr>
+<tr><td class="k">Mid-roll</td><td>Breaks inside an episode, only at chapter marks. Most rips have none, so stay with Post-roll.</td></tr>
+</table>
+<p>If a label on your screen differs a little from this guide (for example "Pad To Nearest Minute"), pick the closest match and send Claude a screenshot so the guide gets fixed.</p>
+
+<h3>7.6 No filler boxes on the schedule item</h3>
+<p>Scroll down inside the item settings; the filler boxes are below Playout Mode. If <b>Fallback Filler</b> is not there, set it on the channel instead (Channels &rarr; edit channel 1 &rarr; <b>Fallback Filler</b>).</p>
+
+<h3>9.3 Timeline is empty or wrong after you change things</h3>
+<p>ErsatzTV rebuilds playouts every hour and after library scans. To see changes now, open Playouts and use the <b>Reset Playout</b> button on that row.</p>
+
+<h3>10.2 What the address should look like</h3>
+<p>Only the part before <code>:8409</code> changes. Keep the rest exactly as copied. Using <code>http://10.6.9.20:8409/...</code> also works; <code>127.0.0.1</code> just keeps the traffic inside the pod.</p>
+
+<h3>10.9 / 11.1 Guide is empty</h3>
+<ul>
+<li>Run Refresh Guide again (10.9) and wait 1 minute.</li>
+<li>Dashboard &rarr; Live TV &rarr; the <b>&hellip;</b> next to XMLTV &rarr; <b>Map Channels</b>: click the pencil by channel 1 and pick the matching guide channel. Click the back arrow to save.</li>
+</ul>
+
+<h3>11.2 Channel spins and never plays</h3>
+<ul>
+<li>In ErsatzTV, open Channels and click the play/preview button on channel 1. If it fails there too, the FFmpeg profile is the cause (4.4).</li>
+<li>If it plays in ErsatzTV but not Jellyfin, recheck the M3U address (10.2).</li>
+<li>Send Claude: ErsatzTV &rarr; Troubleshooting &rarr; Playback &rarr; <b>Upload Results</b>; it gives an ID like <code>etv-xxxx-xxxxxx</code>.</li>
+</ul>
+
+<h3>11.4 Live TV missing on the Roku</h3>
+<p>Sign out and back in on the Roku Jellyfin app, and make sure that person has <b>Allow Live TV access</b> (11.3).</p>
+
+<h3>Series breaks outside Live TV</h3>
+<p>Breaks between episodes when you play a show normally (not as a channel) are a separate project: the series filler plugin. This guide only covers Live TV channels.</p>
+
+<div class="foot">Checked against: ErsatzTV 26.14.0 (legacy, docs at ersatztv.org/docs), Jellyfin 12.3, 2026-11-27. Pod: scripts/podman/sgin/ersatztv.sh (stream pod, SGIN 10.6.9.20, port 8409). Labels not confirmed in the docs, check on screen: FFmpeg profile field names (4.x), filler preset field names (5.x), schedule item filler boxes (7.6), Reset Playout (9.3), Refresh Guide task (10.9).</div>
+</div>
+
+</body>
+</html>
