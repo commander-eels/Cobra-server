@@ -46,6 +46,7 @@ case $INSTANCE in
         || die "sqlite3 isn't installed, so I can't check Comics' libraries. In its UI (Admin -> Libraries) check only /media/$COMICS_DIR is left, then: ALLOW_NARROW=1 $0 comics"
       other=$(sqlite3 -readonly "$DATA/kavita.db" "SELECT Path FROM FolderPath WHERE Path NOT LIKE '/media/$COMICS_DIR%';") \
         || die "couldn't read $DATA/kavita.db. In Comics' UI (Admin -> Libraries) check only /media/$COMICS_DIR is left, then: ALLOW_NARROW=1 $0 comics"
+      # shellcheck disable=SC2001  # sed indents every line of a multi-line list
       [ -z "$other" ] || die "Comics still has libraries outside /media/$COMICS_DIR:
 $(sed 's/^/         /' <<<"$other")
        Move them first (./kavita.sh books / COPY_FROM_COMICS=1 ./kavita.sh rpg), delete them in Comics' Admin -> Libraries
@@ -82,6 +83,7 @@ $(sed 's/^/         /' <<<"$other")
       #   AspNetUserTokens             saved refresh tokens: deleted, so everyone signs in to the RPG Vault afresh
       # The accounts themselves stay (names, passwords, roles, RPG progress); from here on they're separate copies.
       key=$(head -c 64 /dev/urandom | base64 -w0)
+      # shellcheck disable=SC2015  # die exits, so A && B || die is the intended check
       podman unshare sed -i -E "s|(\"TokenKey\"[[:space:]]*:[[:space:]]*\")[^\"]*\"|\1$key\"|" "$DATA/appsettings.json" \
         && podman unshare grep -qF "$key" "$DATA/appsettings.json" \
         || die "couldn't set a new TokenKey in $DATA/appsettings.json. Don't start kavita-rpg; empty $DATA and try again"
