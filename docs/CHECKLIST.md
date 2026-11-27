@@ -49,6 +49,7 @@ One Navidrome with a library per person; comedy and sessions in Audiobookshelf. 
 - [ ] Friends' Jellyfin users (only Eels exists).
 - [ ] Roku TV on the Xfinity side: OPNsense WAN forward `10.0.0.2:8096` → `10.6.9.20:8096` ([roku-tv](roku-tv/README.md)).
 - [ ] Stutter fixes on big files ([manual 3.8c](manual/03-sgin.md#38c-if-some-movies-stutter)).
+- [ ] Filler clips before TV episodes: install Cobra Series Filler ([runbook](jellyfin/series-filler-runbook.md)).
 - [ ] Pin the Jellyfin image to the current 10.x release before v12 lands, so an auto-update
       can't break plugins (`AutoUpdate=registry` in `jellyfin.container`, [manual 3.8](manual/03-sgin.md#38-media-pod)).
 

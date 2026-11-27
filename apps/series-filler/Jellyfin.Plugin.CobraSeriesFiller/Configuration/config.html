@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Cobra Series Filler</title>
+</head>
+<body>
+    <div id="cobraSeriesFillerPage" data-role="page" class="page type-interior pluginConfigurationPage"
+        data-require="emby-input,emby-button,emby-checkbox">
+        <div data-role="content">
+            <div class="content-primary">
+                <h2>Cobra Series Filler</h2>
+                <p>Plays random filler clips before a TV episode. Movies are not touched (Local Intros does those).
+                   The app must have <b>Cinema mode</b> turned on. Roku plays only the first clip.</p>
+                <form id="cobraSeriesFillerForm">
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="FillerFolder">Filler folder</label>
+                        <input id="FillerFolder" name="FillerFolder" type="text" is="emby-input" />
+                        <div class="fieldDescription">The folder as Jellyfin sees it, for example <code>/media/wd1/filler</code>.</div>
+                    </div>
+                    <div class="checkboxContainer checkboxContainer-withDescription">
+                        <label class="emby-checkbox-label">
+                            <input id="IncludeSubfolders" name="IncludeSubfolders" type="checkbox" is="emby-checkbox" />
+                            <span>Include subfolders</span>
+                        </label>
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="MinClips">Fewest clips</label>
+                        <input id="MinClips" name="MinClips" type="number" min="0" max="10" is="emby-input" />
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="MaxClips">Most clips</label>
+                        <input id="MaxClips" name="MaxClips" type="number" min="0" max="10" is="emby-input" />
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="ChancePercent">Chance an episode gets filler (%)</label>
+                        <input id="ChancePercent" name="ChancePercent" type="number" min="0" max="100" is="emby-input" />
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="AvoidRecent">Don't repeat the last ... clips</label>
+                        <input id="AvoidRecent" name="AvoidRecent" type="number" min="0" max="1000" is="emby-input" />
+                    </div>
+                    <div class="inputContainer">
+                        <label class="inputLabel inputLabelUnfocused" for="SkipTag">Skip tag</label>
+                        <input id="SkipTag" name="SkipTag" type="text" is="emby-input" />
+                        <div class="fieldDescription">A show, season or episode with this tag gets no filler.</div>
+                    </div>
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script type="text/javascript">
+            (function () {
+                var pluginId = 'c0b7a5e1-5e71-4f11-8c3a-7e1e5f111e75';
+                var page = document.querySelector('#cobraSeriesFillerPage');
+                var form = document.querySelector('#cobraSeriesFillerForm');
+                var textFields = ['FillerFolder', 'SkipTag'];
+                var numberFields = ['MinClips', 'MaxClips', 'ChancePercent', 'AvoidRecent'];
+
+                page.addEventListener('pageshow', function () {
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        textFields.forEach(function (f) { form.querySelector('#' + f).value = config[f] || ''; });
+                        numberFields.forEach(function (f) { form.querySelector('#' + f).value = config[f]; });
+                        form.querySelector('#IncludeSubfolders').checked = !!config.IncludeSubfolders;
+                        Dashboard.hideLoadingMsg();
+                    });
+                });
+
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    Dashboard.showLoadingMsg();
+                    ApiClient.getPluginConfiguration(pluginId).then(function (config) {
+                        textFields.forEach(function (f) { config[f] = form.querySelector('#' + f).value.trim(); });
+                        numberFields.forEach(function (f) { config[f] = parseInt(form.querySelector('#' + f).value, 10) || 0; });
+                        config.IncludeSubfolders = form.querySelector('#IncludeSubfolders').checked;
+                        ApiClient.updatePluginConfiguration(pluginId, config).then(function (result) {
+                            Dashboard.processPluginConfigurationUpdateResult(result);
+                        });
+                    });
+                    return false;
+                });
+            })();
+        </script>
+    </div>
+</body>
+</html>
