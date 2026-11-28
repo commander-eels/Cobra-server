@@ -297,7 +297,7 @@ Uses PowerShell on **the-box** with its 3 tabs: **windows**, **eels@cobra-gate**
     | Token name | Type `code-home-mirror` |
     | Resource owner | Dropdown: pick `agent61636` |
     | Expiration | Dropdown: pick `366 days` (or the longest offered) |
-    | Repository access | Click **Only select repositories**, then pick `formidable-flow` and `cobra-server` |
+    | Repository access | Click **Only select repositories**, then pick `formidable-flow` |
     | Permissions → Repositories → Contents | Dropdown: pick `Read-only` |
 
 50. Click **Generate token**, then copy the token. Save it in Vaultwarden as `GitHub code-home-mirror token`.
@@ -318,25 +318,23 @@ Uses PowerShell on **the-box** with its 3 tabs: **windows**, **eels@cobra-gate**
 
 53. Click **Migrate repository**. You should see the repo page with `mirror of https://github.com/agent61636/formidable-flow` under its name.
 
-54. Repeat steps 51 to 53 for `https://github.com/agent61636/cobra-server`, repository name `cobra-server`.
-
-55. Open the repo → **Settings** → **Mirror settings**. You should see **Mirror interval** `1h0m0s`.
+54. Open the repo → **Settings** → **Mirror settings**. You should see **Mirror interval** `1h0m0s`.
 
 ## Part F: Nightly backup (tab eels@cobra-stream)
 
-56. Log in as podsvc.
+55. Log in as podsvc.
 
     ```bash
     sudo machinectl shell podsvc@
     ```
 
-57. Go to the SGIN scripts.
+56. Go to the SGIN scripts.
 
     ```bash
     cd ~/cobra-server/scripts/podman/sgin
     ```
 
-58. Run the first backup.
+57. Run the first backup.
 
     ```bash
     ./forgejo-backup.sh
@@ -344,7 +342,7 @@ Uses PowerShell on **the-box** with its 3 tabs: **windows**, **eels@cobra-gate**
 
     You should see `backup done` and `daily Code Home backup enabled (03:40, as podsvc)`.
 
-59. Check the timer.
+58. Check the timer.
 
     ```bash
     systemctl --user list-timers cobra-code-backup.timer
@@ -352,7 +350,7 @@ Uses PowerShell on **the-box** with its 3 tabs: **windows**, **eels@cobra-gate**
 
     You should see one line with tomorrow's date and `03:4`.
 
-60. Leave podsvc.
+59. Leave podsvc.
 
     ```bash
     exit
@@ -376,7 +374,7 @@ Done. The Code Home is at `https://code.songofeo.com`, copies GitHub every hour,
 
 **A12.** SSH stopped working. In the still-open eels@cobra-stream tab run `sudo cp /etc/nftables.conf.bak-before-code /etc/nftables.conf`, then `sudo systemctl restart nftables`, then send Claude the step 7 output.
 
-**A14.** `~/cobra-server` isn't there for podsvc. Run `git clone https://github.com/agent61636/cobra-server ~/cobra-server`, then continue at step 15.
+**A14.** `~/cobra-server` isn't there for podsvc. Run `git clone https://github.com/commander-eels/Cobra-server ~/cobra-server`, then continue at step 15.
 
 **16, update later.** `UPDATE=1 ./forgejo.sh` pulls the newest 15.x and keeps the data. Read the release notes first. If `codeberg.org` is down, `FORGEJO_IMAGE=data.forgejo.org/forgejo/forgejo:15-rootless ./forgejo.sh` uses Forgejo's own mirror.
 
@@ -395,6 +393,8 @@ Done. The Code Home is at `https://code.songofeo.com`, copies GitHub every hour,
 **49.** A fine-grained token can't be made without an expiry. Put a reminder in your calendar a week before it ends. When it does, mirrors stop updating (the copies stay). Make a new token and paste it in each repo's **Settings → Mirror settings → Authorization**.
 
 **52.** If **This repository will be a mirror** is greyed out, the token is wrong. Check it has Contents: Read-only on that repo.
+
+**52, more repos.** Each new repo (DE, Babelforms, anything later) is steps 51 to 53 again with its URL. A fine-grained token covers one GitHub owner only: a repo under another owner (for example `commander-eels/Cobra-server`) needs its own token from step 48 with that owner picked.
 
 **Git over SSH (optional, for repos that live only at home).** In the windows tab: `ssh-keygen -t ed25519 -f $HOME\.ssh\code-home`, then paste `$HOME\.ssh\code-home.pub` into Forgejo → **Settings → SSH / GPG keys → Add key**. Test with `ssh -i $HOME\.ssh\code-home -p 2222 git@10.6.9.20`; you should see `Hi there, eels!`. Mirrors stay read-only, so this is for new home-only repos.
 
