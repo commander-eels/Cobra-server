@@ -18,6 +18,17 @@ Newest first. Don't edit an old entry's decision; add a new entry that replaces 
 
 ---
 
+## 2026-11-28: Code Home copies of the repos live in the house, GitHub stays the workbench
+
+| Field | Entry |
+|---|---|
+| Decision | Forgejo on the SGIN keeps an hourly pull mirror of each GitHub repo (owner chose "GitHub first"). Claude and Grok keep working on GitHub. Availability and integrity (a second, owned copy) over keeping the code in one place only. |
+| Threat | Someone reaches `code.songofeo.com` and reads private code, or the house loses both drives (fire, theft) at once. |
+| Likelihood | Low. Assessed by Claude for the owner; owner to confirm. |
+| Controls | Authelia sign-in + TOTP for `eels` only, then Forgejo's own login with 2FA; signups off; every repo forced private; git over SSH only on the LAN and WireGuard; the GitHub token is read-only; nightly dumps on two drives (vault and dock1a), mode 600; GitHub itself is the off-site copy. |
+| How | [code-home/README.md](../code-home/README.md) (includes the undo list). |
+| Review | 2027-06-28, before Forgejo 15 LTS support ends (2027-07-15). |
+
 ## 2026-11-21: Home Wi-Fi reaches the gate without WireGuard
 
 | Field | Entry |
