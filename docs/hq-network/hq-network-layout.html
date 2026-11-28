@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CR-HQ HQ Network Layout v1 DRAFT</title>
+<style>
+  @page { size: Letter landscape; margin: 0.4in 0.45in; background: #0e100e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0e100e; color: #d9e2d9; font: 9pt/1.35 "DejaVu Sans", sans-serif; }
+  h1, h2, h3, code, th, .mono { font-family: "DejaVu Sans Mono", monospace; }
+  h1 { color: #39ff6a; font-size: 18pt; margin: 2pt 0 3pt; letter-spacing: 1px; }
+  h2 { color: #39ff6a; font-size: 12pt; margin: 4pt 0 5pt; padding: 2pt 0 2pt 8pt; border-left: 4pt solid #39ff6a; break-after: avoid; }
+  h3 { color: #ffd23f; font-size: 9.6pt; margin: 8pt 0 3pt; break-after: avoid; }
+  p { margin: 2pt 0 4pt; }
+  code { color: #ffd23f; font-size: 8.4pt; }
+  .top { font: 7.6pt "DejaVu Sans Mono", monospace; color: #ff4b5a; letter-spacing: 2px; }
+  .intro { border-top: 1px solid #2f4a33; border-bottom: 1px solid #2f4a33; padding: 3pt 0; margin: 3pt 0 6pt; font-size: 8.4pt; color: #9fb39f; }
+  .intro b { color: #d9e2d9; }
+  .tag { display: inline-block; font: bold 6.8pt "DejaVu Sans Mono", monospace; padding: 0 3pt; border: 1px solid; vertical-align: 1px; }
+  .ok { color: #39ff6a; border-color: #39ff6a; } .warn { color: #ffd23f; border-color: #ffd23f; } .bad { color: #ff4b5a; border-color: #ff4b5a; } .vpn { color: #7fd8ff; border-color: #7fd8ff; }
+  .blank { display: inline-block; min-width: 70pt; border-bottom: 1px solid #ffd23f; color: #ffd23f; font: 7.6pt "DejaVu Sans Mono", monospace; }
+  table { width: 100%; border-collapse: collapse; margin: 3pt 0 7pt; font-size: 8pt; }
+  tr { break-inside: avoid; }
+  th { background: #1b2a1d; color: #39ff6a; text-align: left; font-size: 7.6pt; padding: 2.5pt 4pt; border: 1px solid #2f4a33; }
+  td { padding: 2.5pt 4pt; border: 1px solid #2a352b; vertical-align: top; }
+  td.k { color: #fff; font-weight: bold; white-space: nowrap; }
+  tr.zx td.k { color: #ff8a94; }
+  .note { border: 1px solid #6b5a1c; background: #19170e; padding: 3pt 7pt; margin: 4pt 0; font-size: 8pt; break-inside: avoid; }
+  .page { break-before: page; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12pt; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10pt; font-size: 7.6pt; margin: 3pt 0; color: #9fb39f; }
+  .legend span b { display: inline-block; width: 22pt; height: 0; vertical-align: middle; margin-right: 3pt; border-top: 2.2px solid; }
+  svg text { font-family: "DejaVu Sans Mono", monospace; }
+  .foot { margin-top: 6pt; border-top: 1px solid #2f4a33; padding-top: 3pt; font: 7.4pt "DejaVu Sans Mono", monospace; color: #7c8f7c; }
+  ul { margin: 2pt 0 4pt 14pt; padding: 0; } li { margin: 1.2pt 0; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1: BUILDING FLOOR PLAN ============ -->
+<div class="top">CLAUDE-VIPER'S VISUAL FIELD GUIDES · COBRA CORPORATE · CR-HQ · v1 DRAFT 2026-11-28</div>
+<h1>HQ Network: Building Layout</h1>
+<div class="intro">The <b>Headquarters Network (HQ Net)</b> drawn like an office building, floor by floor. <b>Yellow underlined blanks</b> are things only you know (which room, which cable). Fill them on the <b>Miro blueprint board</b>, then the next version of this PDF prints them in. Page 2 is the logical network map, pages 3&ndash;5 are the tables.</div>
+
+<svg width="100%" viewBox="0 0 1000 520" xmlns="http://www.w3.org/2000/svg">
+  <!-- roof line -->
+  <polyline points="20,40 500,6 980,40" fill="none" stroke="#2f4a33" stroke-width="2"/>
+  <text x="500" y="30" fill="#39ff6a" font-size="13" text-anchor="middle" font-weight="bold">HQ · HEADQUARTERS</text>
+
+  <!-- FLOOR: UPSTAIRS -->
+  <rect x="20" y="42" width="960" height="102" fill="#111511" stroke="#2f4a33" stroke-width="1.5"/>
+  <text x="28" y="56" fill="#39ff6a" font-size="10" font-weight="bold">UPSTAIRS</text>
+  <rect x="34" y="62" width="400" height="76" fill="#170f10" stroke="#ff4b5a" stroke-dasharray="4 2"/>
+  <text x="42" y="75" fill="#ff8a94" font-size="9" font-weight="bold">UPSTAIRS OFFICE · WORK ZONE (XFINITY ONLY)</text>
+  <rect x="42" y="82" width="120" height="48" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="48" y="96" fill="#fff" font-size="8.5">RE700X extender</text><text x="48" y="108" fill="#9fb39f" font-size="7.5">Electronomicon_EXT</text><text x="48" y="120" fill="#9fb39f" font-size="7.5">Wi-Fi from Xfinity</text>
+  <rect x="172" y="82" width="110" height="48" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="178" y="96" fill="#fff" font-size="8.5">basic switch</text><text x="178" y="108" fill="#9fb39f" font-size="7.5">fed by RE700X</text><text x="178" y="120" fill="#9fb39f" font-size="7.5">model: ______</text>
+  <rect x="292" y="82" width="134" height="48" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="298" y="96" fill="#fff" font-size="8.5">work laptop dock</text><text x="298" y="108" fill="#ff8a94" font-size="7.5">employer's · corp VPN</text><text x="298" y="120" fill="#ff8a94" font-size="7.5">NEVER on cobra</text>
+  <line x1="162" y1="106" x2="172" y2="106" stroke="#ff4b5a" stroke-width="2"/>
+  <line x1="282" y1="106" x2="292" y2="106" stroke="#ff4b5a" stroke-width="2"/>
+  <rect x="450" y="62" width="250" height="76" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="3 3"/>
+  <text x="458" y="76" fill="#ffd23f" font-size="9" font-weight="bold">OTHER UPSTAIRS ROOMS</text>
+  <text x="458" y="92" fill="#9fb39f" font-size="7.8">Echo / Eufy here? room: ________</text>
+  <text x="458" y="106" fill="#9fb39f" font-size="7.8">Sensi thermostat? room: ______</text>
+  <text x="458" y="120" fill="#9fb39f" font-size="7.8">the-spire + its smart-TV monitor?</text>
+  <text x="458" y="132" fill="#9fb39f" font-size="7.8">  room: ________ (no TV cable)</text>
+  <rect x="716" y="62" width="256" height="76" fill="#0e100e" stroke="#2f4a33"/>
+  <text x="724" y="76" fill="#d9e2d9" font-size="8.5" font-weight="bold">Cobra1 (laptop, Win 10)</text>
+  <text x="724" y="92" fill="#9fb39f" font-size="7.8">upstairs: Ethernet on the basic</text>
+  <text x="724" y="104" fill="#9fb39f" font-size="7.8">switch = Xfinity side, reaches</text>
+  <text x="724" y="116" fill="#7fd8ff" font-size="7.8">cobra via WireGuard 10.6.99.3</text>
+  <text x="724" y="130" fill="#9fb39f" font-size="7.8">half the time in garage studio</text>
+
+  <!-- FLOOR: MAIN -->
+  <rect x="20" y="148" width="960" height="132" fill="#111511" stroke="#2f4a33" stroke-width="1.5"/>
+  <text x="28" y="162" fill="#39ff6a" font-size="10" font-weight="bold">MAIN FLOOR</text>
+  <rect x="34" y="168" width="300" height="106" fill="#170f10" stroke="#ff4b5a" stroke-dasharray="4 2"/>
+  <text x="42" y="182" fill="#ff8a94" font-size="9" font-weight="bold">LIVING ROOM</text>
+  <rect x="42" y="188" width="140" height="52" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="48" y="202" fill="#fff" font-size="8.5">Xfinity gateway</text><text x="48" y="214" fill="#9fb39f" font-size="7.5">10.0.0.1 · Wi-Fi</text><text x="48" y="226" fill="#9fb39f" font-size="7.5">"Electronomicon"</text><text x="48" y="236" fill="#ffd23f" font-size="7">room? ________</text>
+  <rect x="192" y="188" width="134" height="52" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="198" y="202" fill="#fff" font-size="8.5">Big-screen 4K Roku</text><text x="198" y="214" fill="#9fb39f" font-size="7.5">wired to Xfinity</text><text x="198" y="226" fill="#9fb39f" font-size="7.5">Jellyfin 10.0.0.2:8096</text>
+  <line x1="182" y1="214" x2="192" y2="214" stroke="#ff4b5a" stroke-width="2"/>
+  <text x="42" y="254" fill="#9fb39f" font-size="7.6">Nielsen antenna + house amp: room ______</text>
+  <text x="42" y="267" fill="#9fb39f" font-size="7.6">Echo Show 10 / Echos here? ____________</text>
+
+  <rect x="350" y="168" width="380" height="106" fill="#0f1a11" stroke="#39ff6a"/>
+  <text x="358" y="182" fill="#39ff6a" font-size="9" font-weight="bold">MAIN LAB · the-box   (floor? confirm ____)</text>
+  <rect x="358" y="188" width="118" height="52" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="364" y="202" fill="#fff" font-size="8.5">the-box</text><text x="364" y="214" fill="#9fb39f" font-size="7.5">Win 11 · RTX 3070</text><text x="364" y="226" fill="#39ff6a" font-size="7.5">10.6.9.50</text>
+  <rect x="486" y="188" width="110" height="52" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="492" y="202" fill="#fff" font-size="8.5">Switch B</text><text x="492" y="214" fill="#9fb39f" font-size="7.5">next to the-box</text><text x="492" y="226" fill="#ffd23f" font-size="7">model ______</text>
+  <rect x="606" y="188" width="116" height="52" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="612" y="202" fill="#fff" font-size="8.5">Insignia 1080p TV</text><text x="612" y="214" fill="#9fb39f" font-size="7.5">the-box 2nd monitor</text><text x="612" y="226" fill="#9fb39f" font-size="7.5">video only</text>
+  <line x1="476" y1="214" x2="486" y2="214" stroke="#39ff6a" stroke-width="2"/>
+  <line x1="596" y1="214" x2="606" y2="214" stroke="#39ff6a" stroke-width="2"/>
+  <text x="358" y="258" fill="#ffd23f" font-size="7.4">Switch B uplink: port __</text>
+  <text x="358" y="269" fill="#9fb39f" font-size="7.2">route: _____________</text>
+  <text x="556" y="258" fill="#9fb39f" font-size="7.2">manual: the-box = port 4</text>
+  <text x="556" y="269" fill="#9fb39f" font-size="7.2">(direct or via B?)</text>
+
+  <rect x="746" y="168" width="226" height="106" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="3 3"/>
+  <text x="754" y="182" fill="#ffd23f" font-size="9" font-weight="bold">ARCADE · cobra-arcade</text>
+  <text x="754" y="198" fill="#9fb39f" font-size="7.8">OptiPlex 7040 · 10.6.9.30</text>
+  <text x="754" y="211" fill="#9fb39f" font-size="7.8">42" 4K Roku TV as monitor</text>
+  <text x="754" y="224" fill="#9fb39f" font-size="7.8">(heat sink dying, runs 1080p)</text>
+  <text x="754" y="237" fill="#39ff6a" font-size="7.8">wired: cobra-switch port 3</text>
+  <text x="754" y="254" fill="#ffd23f" font-size="7.8">room: ____________</text>
+  <text x="754" y="267" fill="#ffd23f" font-size="7.8">floor: ___________</text>
+
+  <!-- FLOOR: GARAGE (side annex) -->
+  <rect x="20" y="284" width="960" height="56" fill="#111511" stroke="#2f4a33" stroke-width="1.5"/>
+  <text x="28" y="298" fill="#39ff6a" font-size="10" font-weight="bold">GARAGE STUDIO</text>
+  <rect x="160" y="290" width="520" height="44" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="6 3"/>
+  <text x="168" y="304" fill="#ffd23f" font-size="8.5">TEMPORARY cable run from Switch B (next to the-box) out to the garage</text>
+  <text x="168" y="318" fill="#9fb39f" font-size="7.8">Cobra1 lives here half the time. Network here = cobra LAN? ______  length/route: ______</text>
+  <text x="168" y="330" fill="#9fb39f" font-size="7.8">Other gear in the studio: ____________________________</text>
+  <line x1="541" y1="240" x2="541" y2="290" stroke="#ffd23f" stroke-width="2" stroke-dasharray="6 3"/>
+
+  <!-- FLOOR: BASEMENT SERVER ROOM -->
+  <rect x="20" y="344" width="960" height="170" fill="#111511" stroke="#2f4a33" stroke-width="1.5"/>
+  <text x="28" y="358" fill="#39ff6a" font-size="10" font-weight="bold">BASEMENT · SERVER ROOM</text>
+  <rect x="34" y="364" width="300" height="144" fill="#0f1a11" stroke="#39ff6a"/>
+  <text x="42" y="378" fill="#fff" font-size="9" font-weight="bold">cobra-command · Latitude 5580</text>
+  <text x="42" y="390" fill="#9fb39f" font-size="7.6">Proxmox VE 9 · 10.6.9.2:8006</text>
+  <text x="48" y="404" fill="#d9e2d9" font-size="7.6">VM 100 cobra-firewall (OPNsense)</text>
+  <text x="56" y="415" fill="#ff8a94" font-size="7.2">WAN 10.0.0.2</text><text x="140" y="415" fill="#39ff6a" font-size="7.2">LAN 10.6.9.1 · WG 10.6.99.1</text>
+  <text x="48" y="428" fill="#d9e2d9" font-size="7.6">CT 101 cobra-pihole-1   10.6.9.3</text>
+  <text x="48" y="441" fill="#d9e2d9" font-size="7.6">VM 110 cobra-gate       10.6.9.10 :443</text>
+  <text x="48" y="454" fill="#d9e2d9" font-size="7.6">VM 120 cobra-home (HA)  10.6.9.11</text>
+  <text x="56" y="465" fill="#ff8a94" font-size="7.2">net1 Xfinity side 10.0.0.3 (no gateway)</text>
+  <text x="48" y="479" fill="#7c8f7c" font-size="7.6">Fang VM (future, last optional step)</text>
+  <text x="42" y="499" fill="#9fb39f" font-size="7.2">USB 3 NIC = WAN · onboard I219-LM = LAN</text>
+
+  <rect x="346" y="364" width="200" height="66" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="354" y="378" fill="#fff" font-size="9" font-weight="bold">cobra-switch</text>
+  <text x="354" y="391" fill="#9fb39f" font-size="7.6">Omada ES210X-M2 · 10.6.9.5</text>
+  <text x="354" y="404" fill="#9fb39f" font-size="7.6">8x 2.5G + 2x SFP+ · no PoE</text>
+  <text x="354" y="420" fill="#ffd23f" font-size="7.2">in basement? confirm ______</text>
+
+  <rect x="346" y="440" width="200" height="68" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="354" y="454" fill="#fff" font-size="9" font-weight="bold">cobra-stream · SGIN X15</text>
+  <text x="354" y="467" fill="#9fb39f" font-size="7.6">Debian 13 · 10.6.9.20</text>
+  <text x="354" y="480" fill="#9fb39f" font-size="7.6">media pods · Samba · Pi-hole 2</text>
+  <text x="354" y="493" fill="#9fb39f" font-size="7.6">USB hub + drives (wd1, Seagate,</text>
+  <text x="354" y="504" fill="#9fb39f" font-size="7.6">dock1a/1b) · NIC on hub</text>
+
+  <rect x="558" y="364" width="200" height="74" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="566" y="378" fill="#fff" font-size="9" font-weight="bold">cobra-lab · Dell R620</text>
+  <text x="566" y="391" fill="#9fb39f" font-size="7.6">READY TO GO · on only for labs</text>
+  <text x="566" y="404" fill="#9fb39f" font-size="7.6">iDRAC 10.6.9.40 · port 7</text>
+  <text x="566" y="417" fill="#9fb39f" font-size="7.6">Proxmox 10.6.9.41 · port 8</text>
+  <text x="566" y="431" fill="#9fb39f" font-size="7.6">110-160 W while on</text>
+
+  <rect x="558" y="446" width="200" height="62" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="3 3"/>
+  <text x="566" y="460" fill="#ffd23f" font-size="8.5" font-weight="bold">Spares shelf</text>
+  <text x="566" y="473" fill="#9fb39f" font-size="7.6">Netgear 5-port "switch E"</text>
+  <text x="566" y="486" fill="#9fb39f" font-size="7.6">old Google Nest (unplugged)</text>
+  <text x="566" y="499" fill="#9fb39f" font-size="7.6">where kept: ____________</text>
+
+  <rect x="770" y="364" width="202" height="144" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="3 3"/>
+  <text x="778" y="378" fill="#ffd23f" font-size="8.5" font-weight="bold">Server room details</text>
+  <text x="778" y="394" fill="#9fb39f" font-size="7.6">rack / shelf: ____________</text>
+  <text x="778" y="408" fill="#9fb39f" font-size="7.6">power strip / UPS: _______</text>
+  <text x="778" y="422" fill="#9fb39f" font-size="7.6">Xfinity → Latitude WAN</text>
+  <text x="778" y="434" fill="#9fb39f" font-size="7.6">  cable route: ___________</text>
+  <text x="778" y="448" fill="#9fb39f" font-size="7.6">future EAP772 AP spot</text>
+  <text x="778" y="460" fill="#9fb39f" font-size="7.6">  (port 6 + PoE+ injector):</text>
+  <text x="778" y="472" fill="#9fb39f" font-size="7.6">  ______________________</text>
+  <text x="778" y="490" fill="#9fb39f" font-size="7.6">Latitude battery = small</text>
+  <text x="778" y="502" fill="#9fb39f" font-size="7.6">built-in UPS for firewall</text>
+
+  <!-- links inside basement -->
+  <line x1="334" y1="397" x2="346" y2="397" stroke="#39ff6a" stroke-width="2.2"/>
+  <line x1="446" y1="430" x2="446" y2="440" stroke="#39ff6a" stroke-width="2.2"/>
+  <line x1="546" y1="397" x2="558" y2="397" stroke="#39ff6a" stroke-width="2.2"/>
+  <!-- Xfinity to Latitude WAN (red) -->
+  <path d="M 42 214 L 26 214 L 26 500 L 34 500" fill="none" stroke="#ff4b5a" stroke-width="2.2"/>
+  <!-- cobra-switch up to main lab and arcade (green) -->
+  <path d="M 500 364 L 500 356 L 700 356 L 700 274" fill="none" stroke="#39ff6a" stroke-width="2.2"/>
+  <path d="M 540 364 L 540 352 L 860 352 L 860 274" fill="none" stroke="#39ff6a" stroke-width="2.2"/>
+</svg>
+
+<div class="legend">
+  <span><b style="border-color:#39ff6a"></b>cobra LAN 10.6.9.0/24 (trusted, behind OPNsense)</span>
+  <span><b style="border-color:#ff4b5a"></b>Xfinity side 10.0.0.0/24 (untrusted)</span>
+  <span><b style="border-color:#ffd23f;border-top-style:dashed"></b>temporary or unconfirmed cable</span>
+  <span><b style="border-color:#7fd8ff;border-top-style:dotted"></b>WireGuard 10.6.99.0/24</span>
+  <span>Dashed red room = work zone (employer's laptop, keep out of cobra)</span>
+</div>
+
+<!-- ============ PAGE 2: LOGICAL MAP ============ -->
+<div class="page"></div>
+<h2>Logical network map: who talks to whom</h2>
+<svg width="100%" viewBox="0 0 1000 470" xmlns="http://www.w3.org/2000/svg">
+  <rect x="330" y="6" width="340" height="34" fill="#0e100e" stroke="#9fb39f"/>
+  <text x="500" y="28" fill="#fff" font-size="11" text-anchor="middle">INTERNET · Porkbun DNS *.songofeo.com</text>
+  <line x1="500" y1="40" x2="500" y2="62" stroke="#ff4b5a" stroke-width="2.2"/>
+
+  <!-- Xfinity zone -->
+  <rect x="10" y="62" width="980" height="118" fill="#170f10" stroke="#ff4b5a"/>
+  <text x="20" y="78" fill="#ff8a94" font-size="10" font-weight="bold">XFINITY SIDE · 10.0.0.0/24 · UNTRUSTED</text>
+  <rect x="400" y="70" width="200" height="40" fill="#0e100e" stroke="#ff4b5a"/>
+  <text x="500" y="86" fill="#fff" font-size="9" text-anchor="middle">Xfinity gateway 10.0.0.1</text>
+  <text x="500" y="100" fill="#9fb39f" font-size="7.5" text-anchor="middle">DMZ → 10.0.0.2 · DHCP pool .10-.250</text>
+  <g font-size="7.6">
+    <rect x="20" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="26" y="134" fill="#fff">RE700X → switch</text><text x="26" y="146" fill="#ff8a94">work laptop</text><text x="26" y="158" fill="#9fb39f">Cobra1 (upstairs)</text>
+    <rect x="146" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="152" y="134" fill="#fff">Living room Roku</text><text x="152" y="146" fill="#9fb39f">wired · Jellyfin</text><text x="152" y="158" fill="#9fb39f">10.0.0.2:8096</text>
+    <rect x="272" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="278" y="134" fill="#fff">Cobra S21 phone</text><text x="278" y="146" fill="#9fb39f">static 10.0.0.251</text><text x="278" y="158" fill="#9fb39f">DNS 10.0.0.2</text>
+    <rect x="610" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="616" y="134" fill="#fff">Echos + Show 10</text><text x="616" y="146" fill="#9fb39f">Wi-Fi · cloud</text><text x="616" y="158" fill="#9fb39f">count: ____</text>
+    <rect x="736" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="742" y="134" fill="#fff">Eufy bulbs/switches</text><text x="742" y="146" fill="#9fb39f">+ Sensi thermostat</text><text x="742" y="158" fill="#9fb39f">reserve .20-.39</text>
+    <rect x="862" y="120" width="118" height="52" fill="#0e100e" stroke="#ff4b5a"/><text x="868" y="134" fill="#fff">Nielsen antenna</text><text x="868" y="146" fill="#9fb39f">+ house amp</text><text x="868" y="158" fill="#ffd23f">network? ____</text>
+  </g>
+  <line x1="500" y1="110" x2="500" y2="200" stroke="#ff4b5a" stroke-width="2.2"/>
+  <text x="508" y="194" fill="#ff8a94" font-size="7.5">USB 3 NIC (WAN)</text>
+
+  <!-- Latitude -->
+  <rect x="300" y="200" width="400" height="86" fill="#0f1a11" stroke="#39ff6a"/>
+  <text x="310" y="215" fill="#fff" font-size="9.5" font-weight="bold">cobra-command (Proxmox 10.6.9.2)</text>
+  <g font-size="7.6" fill="#d9e2d9">
+    <text x="310" y="230">OPNsense 10.0.0.2 ⇄ 10.6.9.1 · Unbound · DHCP · WireGuard 51820</text>
+    <text x="310" y="243">Pi-hole 1 10.6.9.3 · gate 10.6.9.10 (nginx, Authelia, apps)</text>
+    <text x="310" y="256">Home Assistant 10.6.9.11 (+ net1 10.0.0.3 to reach Wi-Fi gadgets)</text>
+    <text x="310" y="269" fill="#7c8f7c">Fang VM: future, last optional step</text>
+  </g>
+  <path d="M 700 250 L 790 250 L 790 172" fill="none" stroke="#ff4b5a" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="712" y="244" fill="#ff8a94" font-size="7">HA net1 → gadgets</text>
+  <line x1="500" y1="286" x2="500" y2="310" stroke="#39ff6a" stroke-width="2.2"/>
+  <text x="508" y="302" fill="#39ff6a" font-size="7.5">I219-LM (LAN)</text>
+
+  <!-- cobra LAN -->
+  <rect x="10" y="310" width="980" height="152" fill="#0f1a11" stroke="#39ff6a"/>
+  <text x="20" y="326" fill="#39ff6a" font-size="10" font-weight="bold">COBRA LAN · 10.6.9.0/24 · TRUSTED</text>
+  <rect x="400" y="316" width="200" height="32" fill="#0e100e" stroke="#39ff6a"/>
+  <text x="500" y="336" fill="#fff" font-size="9" text-anchor="middle">cobra-switch 10.6.9.5 (Omada)</text>
+  <g font-size="7.6">
+    <rect x="20" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="26" y="386" fill="#39ff6a">port 1</text><text x="26" y="398" fill="#fff">Latitude LAN</text><text x="26" y="410" fill="#9fb39f">(uplink above)</text>
+    <rect x="140" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="146" y="386" fill="#39ff6a">port 2</text><text x="146" y="398" fill="#fff">cobra-stream</text><text x="146" y="410" fill="#9fb39f">SGIN 10.6.9.20</text>
+    <rect x="260" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="266" y="386" fill="#39ff6a">port 3</text><text x="266" y="398" fill="#fff">cobra-arcade</text><text x="266" y="410" fill="#9fb39f">10.6.9.30</text><text x="266" y="422" fill="#9fb39f">+ 42" Roku TV</text>
+    <rect x="380" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="386" y="386" fill="#39ff6a">port 4</text><text x="386" y="398" fill="#fff">the-box .50</text><text x="386" y="410" fill="#ffd23f">via Switch B?</text><text x="386" y="422" fill="#9fb39f">Insignia, garage</text>
+    <rect x="500" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="506" y="386" fill="#39ff6a">port 5</text><text x="506" y="398" fill="#fff">the-spire .51</text><text x="506" y="410" fill="#9fb39f">smart-TV monitor</text><text x="506" y="422" fill="#9fb39f">(HDMI only)</text>
+    <rect x="620" y="372" width="112" height="56" fill="#0e100e" stroke="#ffd23f" stroke-dasharray="3 3"/><text x="626" y="386" fill="#39ff6a">port 6</text><text x="626" y="398" fill="#fff">cobra-ap .6</text><text x="626" y="410" fill="#ffd23f">EAP772 not bought</text>
+    <rect x="740" y="372" width="112" height="56" fill="#0e100e" stroke="#39ff6a"/><text x="746" y="386" fill="#39ff6a">ports 7 + 8</text><text x="746" y="398" fill="#fff">R620 cobra-lab</text><text x="746" y="410" fill="#9fb39f">iDRAC .40 · PVE .41</text>
+    <rect x="860" y="372" width="120" height="56" fill="#0e100e" stroke="#7fd8ff" stroke-dasharray="1.5 2"/><text x="866" y="386" fill="#7fd8ff">WireGuard</text><text x="866" y="398" fill="#fff">10.6.99.0/24</text><text x="866" y="410" fill="#9fb39f">S21 .2 · Cobra1 .3</text><text x="866" y="422" fill="#9fb39f">remote only</text>
+  </g>
+  <path d="M 500 348 L 500 360 M 76 360 L 796 360" fill="none" stroke="#39ff6a" stroke-width="1.6"/>
+  <g stroke="#39ff6a" stroke-width="1.6"><line x1="76" y1="360" x2="76" y2="372"/><line x1="196" y1="360" x2="196" y2="372"/><line x1="316" y1="360" x2="316" y2="372"/><line x1="436" y1="360" x2="436" y2="372"/><line x1="556" y1="360" x2="556" y2="372"/><line x1="676" y1="360" x2="676" y2="372"/><line x1="796" y1="360" x2="796" y2="372"/></g>
+  <text x="20" y="450" fill="#9fb39f" font-size="7.6">SFP+ 1-2: free (10G later). DHCP pool 10.6.9.100-199. Pi-hole 2 lives on the SGIN. Only public TCP port: 443 → gate 10.6.9.10.</text>
+</svg>
+
+<!-- ============ PAGE 3: DEVICE REGISTER ============ -->
+<div class="page"></div>
+<h2>Device register: every box on HQ Net</h2>
+<table>
+  <tr><th>Device</th><th>What it is</th><th>Room / floor</th><th>Network</th><th>IP</th><th>Plugged into</th><th>Notes</th></tr>
+  <tr><td class="k">cobra-command</td><td>Dell Latitude 5580, Proxmox VE 9</td><td>Basement server room</td><td><span class="tag ok">LAN</span> <span class="tag bad">WAN</span></td><td>10.6.9.2</td><td>LAN: switch port 1 · WAN: Xfinity gateway (USB 3 NIC)</td><td>Runs VMs 100, 101, 110, 120. Battery = built-in UPS</td></tr>
+  <tr><td class="k">↳ cobra-firewall</td><td>VM 100, OPNsense</td><td>(inside Latitude)</td><td><span class="tag ok">LAN</span> <span class="tag bad">WAN</span></td><td>10.6.9.1 / 10.0.0.2</td><td>virtual</td><td>Gateway, DHCP, Unbound, WireGuard 10.6.99.1</td></tr>
+  <tr><td class="k">↳ cobra-pihole-1</td><td>CT 101, Pi-hole</td><td>(inside Latitude)</td><td><span class="tag ok">LAN</span></td><td>10.6.9.3</td><td>virtual</td><td>DNS #1</td></tr>
+  <tr><td class="k">↳ cobra-gate</td><td>VM 110, Debian 13, gate pod</td><td>(inside Latitude)</td><td><span class="tag ok">LAN</span></td><td>10.6.9.10</td><td>virtual</td><td>nginx :443, Authelia, Vaultwarden, Paperless, Homepage</td></tr>
+  <tr><td class="k">↳ cobra-home</td><td>VM 120, Home Assistant OS</td><td>(inside Latitude)</td><td><span class="tag ok">LAN</span> <span class="tag bad">net1</span></td><td>10.6.9.11 / 10.0.0.3</td><td>virtual</td><td>ha.songofeo.com. Alexa + Eufy focus</td></tr>
+  <tr><td class="k">↳ Fang VM</td><td>future work VM for Claude + Grok</td><td>(inside Latitude)</td><td>—</td><td>—</td><td>—</td><td><span class="tag warn">FUTURE</span> last optional step</td></tr>
+  <tr><td class="k">cobra-switch</td><td>TP-Link Omada ES210X-M2</td><td>Basement? <span class="blank">confirm</span></td><td><span class="tag ok">LAN</span></td><td>10.6.9.5</td><td>port 1 → Latitude</td><td>No PoE, standalone web UI</td></tr>
+  <tr><td class="k">cobra-stream</td><td>SGIN X15, Debian 13</td><td>Basement server room</td><td><span class="tag ok">LAN</span></td><td>10.6.9.20</td><td>port 2 (USB NIC on hub)</td><td>Jellyfin, ErsatzTV, ABS, Kavita, Navidrome, Samba, Pi-hole 2</td></tr>
+  <tr><td class="k">cobra-arcade</td><td>OptiPlex 7040 cabinet, Win 11</td><td><span class="blank">room</span></td><td><span class="tag ok">LAN</span></td><td>10.6.9.30</td><td>port 3</td><td>LaunchBox / Big Box</td></tr>
+  <tr><td class="k">cobra-lab</td><td>Dell R620, Proxmox VE 9</td><td>Basement server room</td><td><span class="tag ok">LAN</span></td><td>10.6.9.40 / .41</td><td>iDRAC port 7 · NIC1 port 8</td><td>Ready to go; on only for lab sessions</td></tr>
+  <tr><td class="k">the-box</td><td>Win 11, RTX 3070 · MAIN LAB</td><td><span class="blank">room / floor</span></td><td><span class="tag ok">LAN</span></td><td>10.6.9.50</td><td>port 4 <span class="blank">direct or via Switch B?</span></td><td>Where all admin work happens</td></tr>
+  <tr><td class="k">Switch B</td><td>small switch next to the-box</td><td>with the-box</td><td><span class="tag ok">LAN</span>?</td><td>—</td><td>uplink: <span class="blank">port __</span></td><td>Feeds Insignia TV + temp garage run. Model: <span class="blank">______</span></td></tr>
+  <tr><td class="k">the-spire</td><td>Win 11, RTX 2070</td><td><span class="blank">room</span></td><td><span class="tag ok">LAN</span></td><td>10.6.9.51</td><td>port 5</td><td>Monitor is a smart TV, no network cable, never used as TV</td></tr>
+  <tr><td class="k">Cobra1</td><td>Win 10 laptop</td><td>Upstairs / garage studio</td><td><span class="tag bad">Xfinity</span> <span class="tag vpn">WG</span></td><td>10.6.99.3 (WG)</td><td>upstairs basic switch, or garage run</td><td>Reserved 10.6.9.52 for future cobra Wi-Fi</td></tr>
+  <tr><td class="k">cobra-ap</td><td>TP-Link EAP772 + PoE+ injector</td><td><span class="blank">spot</span></td><td><span class="tag ok">LAN</span></td><td>10.6.9.6</td><td>port 6</td><td><span class="tag warn">NOT BOUGHT</span> Wi-Fi "cobra"</td></tr>
+  <tr class="zx"><td class="k">Xfinity gateway</td><td>router mode, Wi-Fi "Electronomicon"</td><td><span class="blank">room</span></td><td><span class="tag bad">Xfinity</span></td><td>10.0.0.1</td><td>coax / ISP</td><td>DMZ to 10.0.0.2 (set in Xfinity app). CyberSecure on</td></tr>
+  <tr class="zx"><td class="k">RE700X extender</td><td>"Electronomicon_EXT"</td><td>Upstairs office</td><td><span class="tag bad">Xfinity</span></td><td>DHCP</td><td>Wi-Fi from gateway</td><td>Stays an extender for the work laptop</td></tr>
+  <tr class="zx"><td class="k">Work laptop</td><td>employer's, corporate VPN</td><td>Upstairs office</td><td><span class="tag bad">Xfinity</span></td><td>DHCP 10.0.0.x</td><td>dock → basic switch → RE700X</td><td><b>Never</b> on cobra, cobra-switch or WireGuard</td></tr>
+  <tr class="zx"><td class="k">Cobra S21</td><td>phone</td><td>everywhere</td><td><span class="tag bad">Xfinity</span> <span class="tag vpn">WG</span></td><td>10.0.0.251 / 10.6.99.2</td><td>Wi-Fi</td><td>Home: DNS 10.0.0.2. Away: WireGuard</td></tr>
+</table>
+
+<!-- ============ PAGE 4: TVs + SMART HOME ============ -->
+<div class="page"></div>
+<div class="cols">
+<div>
+<h2>TVs and screens</h2>
+<table>
+  <tr><th>Screen</th><th>Room</th><th>Connected to</th><th>Network</th><th>Job</th></tr>
+  <tr><td class="k">Big-screen 4K Roku</td><td>Living room</td><td>Xfinity gateway (wired)</td><td><span class="tag bad">Xfinity</span></td><td>Jellyfin at <code>http://10.0.0.2:8096</code></td></tr>
+  <tr><td class="k">Insignia 1080p</td><td>with the-box</td><td>Switch B</td><td><span class="tag ok">LAN</span>?</td><td>the-box 2nd monitor; video only, text is blurry</td></tr>
+  <tr><td class="k">42" 4K Roku</td><td><span class="blank">arcade room</span></td><td>cobra-arcade (HDMI); TV on Omada switch</td><td><span class="tag ok">LAN</span></td><td>Arcade monitor. Dying heat sink, runs at 1080p</td></tr>
+  <tr><td class="k">the-spire smart TV</td><td><span class="blank">room</span></td><td>the-spire (HDMI only)</td><td>none</td><td>Monitor only, never used as a TV</td></tr>
+  <tr><td class="k">Echo Show 10 (~2023)</td><td><span class="blank">room</span></td><td>Wi-Fi</td><td><span class="tag bad">Xfinity</span></td><td>Alexa screen</td></tr>
+</table>
+
+<h2>Antenna and odd gear</h2>
+<table>
+  <tr><th>Item</th><th>Room</th><th>Power / network</th><th>Notes</th></tr>
+  <tr><td class="k">Nielsen antenna</td><td><span class="blank">room</span></td><td><span class="blank">Wi-Fi / cable / none</span></td><td>Part of their ratings program</td></tr>
+  <tr><td class="k">House amplifier</td><td><span class="blank">room</span></td><td><span class="blank">______</span></td><td>Plugged in for Nielsen</td></tr>
+  <tr><td class="k">Google Nest (old)</td><td><span class="blank">stored where</span></td><td>unplugged</td><td>Better than Alexa for science facts</td></tr>
+  <tr><td class="k">Netgear 5-port "switch E"</td><td><span class="blank">stored where</span></td><td>spare</td><td>Unmanaged. Is it Switch B? <span class="blank">yes / no</span></td></tr>
+</table>
+</div>
+<div>
+<h2>Smart home (Home Assistant focus)</h2>
+<p>All on Xfinity Wi-Fi. Home Assistant reaches them through its second card <code>10.0.0.3</code>. Give each gadget an Xfinity reservation in <code>10.0.0.20</code>&ndash;<code>.39</code>. The "HA status" column gets filled in by the Home Assistant work, not here.</p>
+<table>
+  <tr><th>Device</th><th>Room</th><th>Age / model</th><th>Keep or replace</th><th>HA status</th></tr>
+  <tr><td class="k">Echo</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Echo</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Echo</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Echo Show 10</td><td><span class="blank">____</span></td><td>~2023</td><td>keep</td><td></td></tr>
+  <tr><td class="k">Eufy bulb</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Eufy bulb</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Eufy bulb</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Eufy light switch</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Eufy light switch</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td></td></tr>
+  <tr><td class="k">Sensi thermostat</td><td><span class="blank">____</span></td><td><span class="blank">____</span></td><td>keep (app works)</td><td>low priority</td></tr>
+</table>
+<div class="note"><b>Add rows</b> for every Echo, bulb and switch on the Miro board. Each sticky note there becomes one row here in v2.</div>
+</div>
+</div>
+
+<!-- ============ PAGE 5: FILL-IN LIST + IP PLAN ============ -->
+<div class="page"></div>
+<div class="cols">
+<div>
+<h2>Blanks to fill on the Miro board</h2>
+<table>
+  <tr><th>#</th><th>Question</th><th>Your answer</th></tr>
+  <tr><td>1</td><td>Which room and floor is the main lab (the-box)?</td><td></td></tr>
+  <tr><td>2</td><td>Which room holds the Xfinity gateway?</td><td></td></tr>
+  <tr><td>3</td><td>How does the Xfinity cable reach the Latitude in the basement?</td><td></td></tr>
+  <tr><td>4</td><td>Is cobra-switch (Omada) in the basement too?</td><td></td></tr>
+  <tr><td>5</td><td>Switch B next to the-box: model, and which cobra-switch port feeds it?</td><td></td></tr>
+  <tr><td>6</td><td>Is the-box plugged into Switch B, or straight into port 4?</td><td></td></tr>
+  <tr><td>7</td><td>Garage studio run: cable length and route</td><td></td></tr>
+  <tr><td>8</td><td>Which room is cobra-arcade (and its 42" Roku TV) in?</td><td></td></tr>
+  <tr><td>9</td><td>Which room is the-spire in?</td><td></td></tr>
+  <tr><td>10</td><td>Each Echo and the Echo Show: which room?</td><td></td></tr>
+  <tr><td>11</td><td>Each Eufy bulb and switch: which room, and how old?</td><td></td></tr>
+  <tr><td>12</td><td>Sensi thermostat: which room?</td><td></td></tr>
+  <tr><td>13</td><td>Nielsen antenna + amp: which room, on Wi-Fi or wired?</td><td></td></tr>
+  <tr><td>14</td><td>Server room: rack or shelf? Power strip or UPS?</td><td></td></tr>
+  <tr><td>15</td><td>Where should the future EAP772 Wi-Fi AP hang?</td><td></td></tr>
+</table>
+</div>
+<div>
+<h2>IP plan at a glance</h2>
+<table>
+  <tr><th>Range / IP</th><th>Used for</th></tr>
+  <tr class="zx"><td class="k">10.0.0.1</td><td>Xfinity gateway</td></tr>
+  <tr class="zx"><td class="k">10.0.0.2</td><td>OPNsense WAN (DMZ host)</td></tr>
+  <tr class="zx"><td class="k">10.0.0.3</td><td>Home Assistant net1</td></tr>
+  <tr class="zx"><td class="k">10.0.0.10&ndash;.250</td><td>Xfinity DHCP pool</td></tr>
+  <tr class="zx"><td class="k">10.0.0.20&ndash;.39</td><td>reserve for Sensi + Eufy gadgets</td></tr>
+  <tr class="zx"><td class="k">10.0.0.251</td><td>Cobra S21 (static)</td></tr>
+  <tr><td class="k">10.6.9.1</td><td>OPNsense LAN, gateway, Unbound</td></tr>
+  <tr><td class="k">10.6.9.2 / .3 / .5 / .6</td><td>Proxmox · Pi-hole 1 · cobra-switch · cobra-ap (future)</td></tr>
+  <tr><td class="k">10.6.9.10 / .11</td><td>gate · Home Assistant</td></tr>
+  <tr><td class="k">10.6.9.20 / .30</td><td>cobra-stream · cobra-arcade</td></tr>
+  <tr><td class="k">10.6.9.40 / .41</td><td>R620 iDRAC · R620 Proxmox</td></tr>
+  <tr><td class="k">10.6.9.50 / .51 / .52</td><td>the-box · the-spire · Cobra1 (future Wi-Fi)</td></tr>
+  <tr><td class="k">10.6.9.100&ndash;199</td><td>cobra DHCP pool</td></tr>
+  <tr><td class="k">10.6.99.0/24</td><td>WireGuard: .1 firewall, .2 S21, .3 Cobra1</td></tr>
+</table>
+<div class="note"><b>Two networks, one house.</b> Everything with a red tag lives on Xfinity and is untrusted. Everything green is behind OPNsense. The work laptop stays red forever.</div>
+</div>
+</div>
+
+<div class="foot">CR-HQ v1 DRAFT · 2026-11-28 · Source: manual part 00 IP plan + port plan (2.12, part 9) and the owner's HQ inventory of 2026-11-28 · Reference doc, no commands · Fill-in board: Miro "HQ Net Blueprint"</div>
+
+</body>
+</html>
