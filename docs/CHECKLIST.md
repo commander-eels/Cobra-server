@@ -89,6 +89,9 @@ One Navidrome with a library per person; comedy and sessions in Audiobookshelf. 
 - [ ] Manual: the Quadlet-vs-scripts note (the gate runs the manual's Quadlets).
 - [ ] Check the old "stage 0/1 guides" and "SSH denied at step 1.7" threads for anything still open.
 
+- [ ] **Code Home** (Forgejo at `code.songofeo.com`, hourly copies of the GitHub repos, nightly backup):
+      [runbook](code-home/README.md). Still to tell Claude: the final name, and what DE stands for.
+
 ## 9. Last: the Claude-Viper form submission extension
 
 - [ ] Our own form service for both **hailcobra.com** and **songofeo.com** (replacing FormSubmit

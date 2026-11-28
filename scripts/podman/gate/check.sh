@@ -134,6 +134,14 @@ if [ "$code" != 000 ]; then
   [ "$code" = 403 ] && ok "$h/f/ from another site" "403, refused" || fail "$h/f/ from another site" "$code (expected 403)"
 fi
 
+echo "== Code Home (Forgejo on the SGIN: always the sign-in + TOTP first, eels only)"
+probe "code.$DOMAIN"
+if [ "$CODE" = 302 ] && [[ $LOC == "$PORTAL"* ]]; then ok "code.$DOMAIN" "302 to the sign-in (Forgejo)"
+elif [ "$CODE" = 000 ]; then note "code.$DOMAIN" "no server block yet (docs/code-home/README.md)"
+elif [ "$CODE" = 403 ]; then fail "code.$DOMAIN" "403: add its access_control rules to Authelia (docs/code-home/README.md)"
+else fail "code.$DOMAIN" "$CODE ${LOC:-}: should be a 302 to $PORTAL. Is auth_request missing from code.conf?"
+fi
+
 echo "== Vaultwarden (LAN and WireGuard only, never through the sign-in)"
 probe "vault.$DOMAIN"
 case $CODE in
